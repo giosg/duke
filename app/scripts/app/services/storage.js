@@ -2,7 +2,8 @@
 (function(angular) {
   'use strict';
   var COMMANDS = {
-    GIOSG_ENABLED: 'giosgEnabled'
+    GIOSG_ENABLED: 'giosgEnabled',
+    BASIC_INFO: 'basicInfo'
   };
 
   angular.module('popup', [])
@@ -51,6 +52,10 @@
 
     PortService.prototype.isGiosgEnabled = function() {
       return this.sendAsyncMessage({ command : COMMANDS.GIOSG_ENABLED });
+    };
+
+    PortService.prototype.getBasicInfo = function() {
+      return this.sendAsyncMessage({ command : COMMANDS.BASIC_INFO });
     };
 
     var service = new PortService();

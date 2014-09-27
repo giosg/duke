@@ -5,7 +5,7 @@ angular.module('popup')
   .controller('MainController', ['$scope', 'PortService', function($scope, PortService) {
       $scope.welcomeMsg = "This is your first chrome extension";
       $scope.contribute = function() {
-        PortService.isGiosgEnabled().then(function(res) {
+        PortService.getBasicInfo().then(function(res) {
             $scope.result = res;
         });
       };
