@@ -4,16 +4,21 @@
 
   angular.module('popup.services')
   .factory('PortService', ['$rootScope', '$q', function($rootScope, $q) {
+
     function PortService() {
       this.port = null;
       this.queryCounter = 0;
       this.queries = {};
+      var deferred = $q.defer();
+      this.afterConnected = deferred.promise;
+      this.connectionDeferred = deferred;
     }
 
     PortService.prototype.connect = function() {
       var self = this;
       chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
         self.port = chrome.tabs.connect(tabs[0].id);
+        self.connectionDeferred.resolve();
         self.port.onMessage.addListener(function() {
           self.onPortMessage.apply(self, arguments);
         });
@@ -38,9 +43,11 @@
       this.queries[this.queryCounter] = deferred;
 
       // TODO: handle disconnected port
-      this.port.postMessage({
-        query: self.queryCounter,
-        request: request
+      this.afterConnected.then(function(){
+        self.port.postMessage({
+          query: self.queryCounter,
+          request: request
+        });
       });
 
       return deferred.promise;
