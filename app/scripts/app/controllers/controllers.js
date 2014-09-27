@@ -3,11 +3,9 @@
 (function(angular, chrome) {
 angular.module('popup')
   .controller('MainController', ['$scope', 'ClientInfoService', function($scope, ClientInfoService) {
-      $scope.welcomeMsg = "This is your first chrome extension";
+      $scope.clientInfo = ClientInfoService.output;
       $scope.contribute = function() {
-        ClientInfoService.getBasicInfo().then(function(res) {
-            $scope.result = res;
-        });
+        ClientInfoService.getBasicInfo();
       };
   }]);
 })(angular, chrome);

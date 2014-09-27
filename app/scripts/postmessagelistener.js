@@ -2,6 +2,18 @@
 (function(window) {
   'use strict';
   var BASICFIELDS = ['apiConfig', 'companyId', 'domainId', 'locationCity', 'locationCountry', 'previousPurchases', 'rooms', 'sessionUuid', 'useCanonicalUrl', 'visitCount', 'visitorCid', 'visitorGid', 'visitorId'];
+
+  function checkCompatibility() {
+    var isCompatible = true;
+    if (typeof(MooTools) == "object") {
+      var ver = MooTools.version.split('.');
+      if (parseInt(ver[0], 10) < 2 && parseInt(ver[1], 10) < 5) {
+        isCompatible = false;
+      }
+    }
+    return isCompatible;
+  }
+
   function DukePostMessageClient() {
   }
 
@@ -18,6 +30,7 @@
       });
       response.rules = giosg.rulesConfig.getRules();
     }
+    response.isCompatible = checkCompatibility();
     return response;
   };
 
