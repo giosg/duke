@@ -2,10 +2,10 @@
 
 (function(angular, chrome) {
 angular.module('popup')
-  .controller('MainController', ['$scope', 'PortService', function($scope, PortService) {
+  .controller('MainController', ['$scope', 'ClientInfoService', function($scope, ClientInfoService) {
       $scope.welcomeMsg = "This is your first chrome extension";
       $scope.contribute = function() {
-        PortService.getBasicInfo().then(function(res) {
+        ClientInfoService.getBasicInfo().then(function(res) {
             $scope.result = res;
         });
       };

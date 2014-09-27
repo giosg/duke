@@ -1,12 +1,8 @@
 /* globals chrome, angular */
 (function(angular) {
   'use strict';
-  var COMMANDS = {
-    GIOSG_ENABLED: 'giosgEnabled',
-    BASIC_INFO: 'basicInfo'
-  };
 
-  angular.module('popup', [])
+  angular.module('popup', ['popup.clientinfo'])
   .factory('PortService', ['$rootScope', '$q', function($rootScope, $q) {
     function PortService() {
       this.port = null;
@@ -48,14 +44,6 @@
       });
 
       return deferred.promise;
-    };
-
-    PortService.prototype.isGiosgEnabled = function() {
-      return this.sendAsyncMessage({ command : COMMANDS.GIOSG_ENABLED });
-    };
-
-    PortService.prototype.getBasicInfo = function() {
-      return this.sendAsyncMessage({ command : COMMANDS.BASIC_INFO });
     };
 
     var service = new PortService();
