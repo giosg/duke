@@ -4,7 +4,7 @@
     BASIC_INFO: 'basicInfo'
   };
 
-  angular.module('popup.clientinfo', ['popup'])
+  angular.module('popup.services')
   .factory('ClientInfoService', ['PortService', function(PortService) {
     function ClientInfoService() {
       this.output = {};

@@ -2,7 +2,7 @@
 (function(angular) {
   'use strict';
 
-  angular.module('popup', ['popup.clientinfo'])
+  angular.module('popup.services')
   .factory('PortService', ['$rootScope', '$q', function($rootScope, $q) {
     function PortService() {
       this.port = null;
