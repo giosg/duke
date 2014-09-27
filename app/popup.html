@@ -15,7 +15,11 @@
   <body>
 
     <div ng-controller="MainController">
-        <button class="btn btn-info" ng-click="contribute()">get config</button>
+      <tabset>
+        <tab select="contribute()">
+          <tab-heading>
+            <i class="fa fa-eye"></i> Overview
+          </tab-heading>
         <h3>Overview</h3>
         <ul class="list-group">
           <li class="list-group-item" ng-class="{'list-group-item-success': clientInfo.hasGiosg, 'list-group-item-danger': !clientInfo.hasGiosg}">
@@ -51,6 +55,24 @@
         <strong>Company ID</strong>  <kbd ng-show="clientInfo.companyId">{{ clientInfo.companyId  }}</kbd><br />
         <strong>Visitor CID</strong> <kbd ng-show="clientInfo.visitorCid">{{ clientInfo.visitorCid  }}</kbd><br />
         <strong>Visitor GID</strong> <kbd ng-show="clientInfo.visitorGid">{{ clientInfo.visitorGid  }}</kbd>
+
+        </tab>
+        <tab>
+          <tab-heading>
+            <i class="fa fa-cogs"></i> Rules
+          </tab-heading>
+          I got rules
+        </tab>
+
+        <tab>
+          <tab-heading>
+            <i class="fa fa-shopping-cart"></i> Cart
+          </tab-heading>
+          I got cart
+        </tab>
+
+      </tabset>
+
     </div>
     <!-- build:js popup.js -->
     <script src="bower_components/jquery/dist/jquery.min.js"></script>
