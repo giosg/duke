@@ -1,9 +1,9 @@
 (function(window, document, chrome) {
   'use strict';
-  function GiosgMessageProxy() {
+  function DukeMessageProxy() {
   }
 
-  GiosgMessageProxy.prototype.injectPostMessageListener = function() {
+  DukeMessageProxy.prototype.injectPostMessageListener = function() {
     var s = document.createElement('script');
     // TODO: add "scripts/postmessagelistener.js" to web_accessible_resources in manifest.json
     s.src = chrome.extension.getURL('scripts/postmessagelistener.js');
@@ -13,7 +13,7 @@
     (document.head||document.documentElement).appendChild(s);
   };
 
-  GiosgMessageProxy.prototype.onPostMessage = function(event) {
+  DukeMessageProxy.prototype.onPostMessage = function(event) {
     // We only accept messages from ourselves
     if (event.source != window)
       return;
@@ -24,12 +24,12 @@
     }
   };
 
-  GiosgMessageProxy.prototype.onPortMessage = function(message) {
+  DukeMessageProxy.prototype.onPortMessage = function(message) {
     message._type = 'DUKEREQUEST';
     window.postMessage(message,'*');
   };
 
-  GiosgMessageProxy.prototype.attachProxyListeners = function() {
+  DukeMessageProxy.prototype.attachProxyListeners = function() {
     var self = this;
 
     chrome.runtime.onConnect.addListener(function(port) {
@@ -54,7 +54,7 @@
     });
   };
 
-  var proxy = new GiosgMessageProxy();
+  var proxy = new DukeMessageProxy();
   proxy.attachProxyListeners();
   proxy.injectPostMessageListener();
 
