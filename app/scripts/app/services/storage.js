@@ -1,4 +1,11 @@
-angular.module('popup', [])
+/* globals chrome, angular */
+(function(angular) {
+  'use strict';
+  var COMMANDS = {
+    GIOSG_ENABLED: 'giosgEnabled'
+  };
+
+  angular.module('popup', [])
   .factory('PortService', ['$rootScope', '$q', function($rootScope, $q) {
     function PortService() {
       this.port = null;
@@ -21,7 +28,7 @@ angular.module('popup', [])
       $rootScope.$evalAsync(function() {
         if(self.queries[message.query]) {
           self.queries[message.query].resolve(message);
-          delete self.queries[message.query].resolve(message);
+          delete self.queries[message.query];
         }
       });
     };
@@ -42,8 +49,13 @@ angular.module('popup', [])
       return deferred.promise;
     };
 
+    PortService.prototype.isGiosgEnabled = function() {
+      return this.sendAsyncMessage({ command : COMMANDS.GIOSG_ENABLED });
+    };
+
     var service = new PortService();
     service.connect();
     return service;
 
   }]);
+})(angular);

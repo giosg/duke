@@ -17,7 +17,7 @@
     // We only accept messages from ourselves
     if (event.source != window)
       return;
-    if (event.data._type && (event.data._type == "GIOSGTOOLRESPONSE")) {
+    if (event.data._type && (event.data._type == "DUKERESPONSE")) {
       console.log("RESOLVING QUERY ", event.data.query);
       console.log("WITH RESPONSE", event.data.response);
       this.port.postMessage(event.data);
@@ -25,7 +25,7 @@
   };
 
   GiosgMessageProxy.prototype.onPortMessage = function(message) {
-    message._type = 'GIOSGTOOLREQUEST';
+    message._type = 'DUKEREQUEST';
     window.postMessage(message,'*');
   };
 
