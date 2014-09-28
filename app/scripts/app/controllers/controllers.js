@@ -2,9 +2,17 @@
 
 (function(angular, chrome) {
    angular.module('popup')
-  .controller('MainController', ['$scope', 'ClientInfoService', function($scope, ClientInfoService) {
+  .controller('MainController', ['$scope', function($scope) {
+  }])
+  .controller('OverViewController', ['$scope', 'ClientInfoService', function($scope, ClientInfoService) {
       $scope.clientInfo = ClientInfoService.output;
-      $scope.contribute = function() {
+      $scope.getBasicInfo = function() {
+        ClientInfoService.getBasicInfo();
+      };
+  }])
+  .controller('RuleController', ['$scope', 'ClientInfoService', function($scope, ClientInfoService) {
+      $scope.clientInfo = ClientInfoService.output;
+      $scope.getBasicInfo = function() {
         ClientInfoService.getBasicInfo();
       };
   }]);

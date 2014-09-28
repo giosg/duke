@@ -16,52 +16,17 @@
 
     <div ng-controller="MainController">
       <tabset>
-        <tab select="contribute()">
+        <tab ng-controller="OverViewController" select="getBasicInfo()">
           <tab-heading>
             <i class="fa fa-eye"></i> Overview
           </tab-heading>
-        <h3>Overview</h3>
-        <ul class="list-group">
-          <li class="list-group-item" ng-class="{'list-group-item-success': clientInfo.hasGiosg, 'list-group-item-danger': !clientInfo.hasGiosg}">
-            Giosg script loaded
-            <i class="fa fa-check text-success pull-right" ng-show="clientInfo.hasGiosg"></i>
-            <i class="fa fa-times text-danger pull-right" ng-hide="clientInfo.hasGiosg"></i>
-          </li>
-
-          <li class="list-group-item" ng-class="{'list-group-item-success': clientInfo.isCompatible, 'list-group-item-danger': !clientInfo.isCompatible}">
-            No compatibility issues detected
-            <i class="fa fa-check text-success pull-right" ng-show="clientInfo.isCompatible"></i>
-            <i class="fa fa-times text-danger pull-right" ng-hide="clientInfo.isCompatible"></i>
-          </li>
-
-          <li class="list-group-item" ng-class="{'list-group-item-success': clientInfo.rooms.length, 'list-group-item-danger': !clientInfo.rooms.length}">
-            Rooms connected
-            <span class="pull-right" ng-class="{'text-success': clientInfo.rooms.length, 'text-danger': !clientInfo.rooms.length}"> {{ clientInfo.rooms.length || 0}} </span>
-          </li>
-
-          <li class="list-group-item" ng-class="{'list-group-item-success': clientInfo.rules.length, 'list-group-item-warning': !clientInfo.rules.length}">
-            Rules configured
-            <span class="pull-right" ng-class="{'text-success': clientInfo.rules.length, 'text-danger': !clientInfo.rules.length}"> {{ clientInfo.rules.length || 0}} </span>
-          </li>
-
-          <li class="list-group-item" ng-class="{'list-group-item-success': clientInfo.enabledCartSelectors.length, 'list-group-item-warning': !clientInfo.enabledCartSelectors.length}">
-            Shoppingcart selectors enabled
-            <span class="pull-right" ng-class="{'text-success': clientInfo.enabledCartSelectors.length, 'text-danger': !clientInfo.enabledCartSelectors.length}"> {{ clientInfo.enabledCartSelectors.length || 0 }} </span>
-          </li>
-        </ul>
-        <h3>Technical info</h3>
-        <strong>Company ID</strong>  <kbd ng-show="clientInfo.companyId">{{ clientInfo.companyId }}</kbd><br />
-        <strong>Domain ID</strong>   <kbd ng-show="clientInfo.domainId">{{ clientInfo.domainId  }}</kbd><br />
-        <strong>Company ID</strong>  <kbd ng-show="clientInfo.companyId">{{ clientInfo.companyId  }}</kbd><br />
-        <strong>Visitor CID</strong> <kbd ng-show="clientInfo.visitorCid">{{ clientInfo.visitorCid  }}</kbd><br />
-        <strong>Visitor GID</strong> <kbd ng-show="clientInfo.visitorGid">{{ clientInfo.visitorGid  }}</kbd>
-
+          <div ng-include="'templates/overview.html'"></div>
         </tab>
-        <tab>
+        <tab ng-controller="RuleController" select="getBasicInfo()">
           <tab-heading>
             <i class="fa fa-cogs"></i> Rules
           </tab-heading>
-          I got rules
+          <div ng-include="'templates/rules.html'"></div>
         </tab>
 
         <tab>

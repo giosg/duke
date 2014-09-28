@@ -3,7 +3,11 @@
   'use strict';
   var BASICFIELDS = ['apiConfig', 'companyId', 'domainId', 'locationCity', 'locationCountry', 'previousPurchases', 'rooms', 'sessionUuid', 'useCanonicalUrl', 'visitCount', 'visitorCid', 'visitorGid', 'visitorId'];
 
-  function checkCompatibility() {
+
+  function DukePostMessageClient() {
+  }
+
+  DukePostMessageClient.prototype.checkCompatibility = function () {
     var isCompatible = true;
     if (typeof(MooTools) == "object") {
       var ver = MooTools.version.split('.');
@@ -12,13 +16,6 @@
       }
     }
     return isCompatible;
-  }
-
-  function DukePostMessageClient() {
-  }
-
-  DukePostMessageClient.prototype.on_giosgEnabled = function() {
-    return { 'FOO': 'BAR'};
   };
 
   DukePostMessageClient.prototype.on_basicInfo = function() {
@@ -28,9 +25,11 @@
       BASICFIELDS.forEach(function(f) {
         response[f] = giosg[f];
       });
+      response.ruleactionTypes = giosg.rulesConfig.actionTypes;
+      response.ruleconditionTypes = giosg.rulesConfig.conditionTypes;
       response.rules = giosg.rulesConfig.getRules();
     }
-    response.isCompatible = checkCompatibility();
+    response.isCompatible = this.checkCompatibility();
     return response;
   };
 
