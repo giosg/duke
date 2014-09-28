@@ -18,6 +18,14 @@
     return isCompatible;
   };
 
+  DukePostMessageClient.prototype.inverseObject = function(obj) {
+    var inversed = {};
+    Object.keys(obj).forEach(function(key) {
+      inversed[obj[key]] = key;
+    });
+    return inversed;
+  };
+
   DukePostMessageClient.prototype.on_basicInfo = function() {
     var response = {};
     response.hasGiosg = window.giosg && typeof window.giosg == 'object';
@@ -25,8 +33,8 @@
       BASICFIELDS.forEach(function(f) {
         response[f] = giosg[f];
       });
-      response.ruleactionTypes = giosg.rulesConfig.actionTypes;
-      response.ruleconditionTypes = giosg.rulesConfig.conditionTypes;
+      response.ruleactionTypes = this.inverseObject(giosg.rulesConfig.actionTypes);
+      response.ruleconditionTypes = this.inverseObject(giosg.rulesConfig.conditionTypes);
       response.rules = giosg.rulesConfig.getRules();
     }
     response.isCompatible = this.checkCompatibility();
