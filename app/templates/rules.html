@@ -17,7 +17,7 @@
     <strong>Conditions</strong>
     <div ng-repeat="condition in rule.conditions">
         <span class="label label-primary">{{ clientInfo.ruleconditionTypes[condition.type] }}</span>
-        <code style="white-space: normal; display: block;">{{ condition.value }}</code>
+        <input tyle="text" ng-model="condition.value"  class="form-control input-xs"/>
     </div>
     <hr style="margin-top: 2px; margin-bottom: 2px;"/>
     <button class="btn btn-success btn-xs" ng-click="runRule(rule)"><i class="fa fa-play"> </i> Recheck if rule matches </button>
