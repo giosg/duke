@@ -1,8 +1,9 @@
 
   var COMMANDS = {
     GIOSG_ENABLED: 'giosgEnabled',
-    BASIC_INFO: 'basicInfo',
-    MATCHRULE: 'matchRule'
+    BASIC_INFO:    'basicInfo',
+    MATCHRULE:     'matchRule',
+    RUNCART:       'runCart'
   };
 
   angular.module('popup.services')
@@ -45,6 +46,14 @@
       return PortService.sendAsyncMessage({ command : COMMANDS.MATCHRULE, rule: rule }).
       then(function(message) {
         rule.match = message.response.match;
+      });
+    };
+
+    ClientInfoService.prototype.runCart = function() {
+      var self = this;
+      return PortService.sendAsyncMessage({ command : COMMANDS.RUNCART }).
+      then(function(message) {
+        self.output.cartProducts = message.response.products;
       });
     };
 

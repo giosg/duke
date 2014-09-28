@@ -23,5 +23,12 @@
       $scope.runRule = function(rule) {
         ClientInfoService.matchRule(rule);
       };
+  }])
+  .controller('CartController', ['$scope', 'ClientInfoService', function($scope, ClientInfoService) {
+      $scope.clientInfo = ClientInfoService.output;
+
+      $scope.runCart = function() {
+        ClientInfoService.runCart();
+      };
   }]);
 })(angular, chrome);

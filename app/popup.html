@@ -29,11 +29,14 @@
           <div ng-include="'templates/rules.html'"></div>
         </tab>
 
-        <tab>
+        <tab ng-controller="CartController" select="runCart()">
           <tab-heading>
             <i class="fa fa-shopping-cart"></i> Cart
           </tab-heading>
-          I got cart
+          <div ng-repeat="product in clientInfo.cartProducts">
+          {{ product.name }}
+          <span class="label label-success">{{ product.price }}</span>
+        </div>
         </tab>
 
       </tabset>
