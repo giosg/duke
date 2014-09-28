@@ -37,15 +37,16 @@
 
     PortService.prototype.sendAsyncMessage = function(request) {
       var self = this;
-      this.queryCounter++;
+      this.queryCounter = this.queryCounter + 1;
+      var currentQuery = this.queryCounter;
 
       var deferred = $q.defer();
-      this.queries[this.queryCounter] = deferred;
+      this.queries[currentQuery] = deferred;
 
       // TODO: handle disconnected port
       this.afterConnected.then(function(){
         self.port.postMessage({
-          query: self.queryCounter,
+          query: currentQuery,
           request: request
         });
       });
