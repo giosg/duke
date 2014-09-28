@@ -1,7 +1,8 @@
 
   var COMMANDS = {
     GIOSG_ENABLED: 'giosgEnabled',
-    BASIC_INFO: 'basicInfo'
+    BASIC_INFO: 'basicInfo',
+    MATCHRULE: 'matchRule'
   };
 
   angular.module('popup.services')
@@ -16,13 +17,15 @@
 
     ClientInfoService.prototype.handleCartSettings = function(apiConfig) {
       var enabledCartSelectors = [];
-      angular.forEach(apiConfig.cartSelectors, function(selectorObj, selectorName) {
-        if(selectorObj.type != "0") {
-          // selector enabled
-          selectorObj.selectorName = selectorName;
-          enabledCartSelectors.push(selectorObj);
-        }
-      });
+      if(apiConfig && apiConfig.cartSelectors) {
+        angular.forEach(apiConfig.cartSelectors, function(selectorObj, selectorName) {
+          if(selectorObj.type != "0") {
+            // selector enabled
+            selectorObj.selectorName = selectorName;
+            enabledCartSelectors.push(selectorObj);
+          }
+        });
+      }
       this.output.enabledCartSelectors = enabledCartSelectors;
     };
 
@@ -34,6 +37,14 @@
         if(message.response.hasGiosg) {
           self.handleCartSettings(message.response.apiConfig);
         }
+      });
+    };
+
+    ClientInfoService.prototype.matchRule = function(rule) {
+      var self = this;
+      return PortService.sendAsyncMessage({ command : COMMANDS.MATCHRULE, rule: rule }).
+      then(function(message) {
+        rule.match = message.response.match;
       });
     };
 

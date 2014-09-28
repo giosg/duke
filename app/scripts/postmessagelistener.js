@@ -7,6 +7,14 @@
   function DukePostMessageClient() {
   }
 
+
+  DukePostMessageClient.prototype.on_matchRule = function(data) {
+    var self = this;
+    GiosgClient.ruleMatches(data.request.rule).then(function(match) {
+      self.sendResponse(data.query, { match: !! match });
+    });
+  };
+
   DukePostMessageClient.prototype.checkCompatibility = function () {
     var isCompatible = true;
     if (typeof(MooTools) == "object") {
@@ -26,7 +34,7 @@
     return inversed;
   };
 
-  DukePostMessageClient.prototype.on_basicInfo = function() {
+  DukePostMessageClient.prototype.on_basicInfo = function(data) {
     var response = {};
     response.hasGiosg = window.giosg && typeof window.giosg == 'object';
     if(response.hasGiosg) {
@@ -38,7 +46,7 @@
       response.rules = giosg.rulesConfig.getRules();
     }
     response.isCompatible = this.checkCompatibility();
-    return response;
+    this.sendResponse(data.query, response);
   };
 
 
@@ -48,12 +56,14 @@
     if(event.data._type == 'DUKEREQUEST') {
       var methodName = 'on_'+ event.data.request.command;
       var response;
-      console.log(methodName);
       if (this[methodName]) {
-        response = this[methodName](event.data);
+        this[methodName](event.data);
       }
-      window.postMessage({ _type: 'DUKERESPONSE', query: event.data.query, response: response }, '*');
     }
+  };
+
+  DukePostMessageClient.prototype.sendResponse = function(query, response) {
+    window.postMessage({ _type: 'DUKERESPONSE', query: event.data.query, response: response }, '*');
   };
 
   DukePostMessageClient.prototype.attachPostMessageListener = function() {

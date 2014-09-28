@@ -13,7 +13,15 @@
   .controller('RuleController', ['$scope', 'ClientInfoService', function($scope, ClientInfoService) {
       $scope.clientInfo = ClientInfoService.output;
       $scope.getBasicInfo = function() {
-        ClientInfoService.getBasicInfo();
+        ClientInfoService.getBasicInfo().then(function() {
+          angular.forEach($scope.clientInfo.rules, function(rule) {
+            $scope.runRule(rule);
+          });
+        });
+      };
+
+      $scope.runRule = function(rule) {
+        ClientInfoService.matchRule(rule);
       };
   }]);
 })(angular, chrome);
