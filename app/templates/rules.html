@@ -3,9 +3,9 @@
     <i class="fa fa-chevron-down" ng-hide="expanded"></i>
     <i class="fa fa-chevron-up" ng-show="expanded"></i>
     {{ rule.name }}
-    <span class="label label-success" ng-show="rule.match">Rule matches</span>
-    <span class="label label-danger" ng-show="rule.match === false">Rule does not match</span>
   </a>
+  <span class="label label-success" ng-show="rule.match">Rule matches</span>
+  <span class="label label-danger" ng-show="rule.match === false">Rule does not match</span>
 
   <div ng-show="expanded" class="well well-small">
     <strong>Action</strong> <span class="label label-primary">{{ clientInfo.ruleactionTypes[rule.action.type] || "ACTION TYPE " + rule.action.type }}</span>
