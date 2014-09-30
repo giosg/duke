@@ -22,7 +22,7 @@
           </tab-heading>
           <div ng-include="'templates/overview.html'"></div>
         </tab>
-        <tab ng-controller="RuleController" select="getBasicInfo()">
+        <tab ng-controller="RuleController as ruleController" select="ruleController.loadRuleStates()">
           <tab-heading>
             <i class="fa fa-cogs"></i> Rules
           </tab-heading>

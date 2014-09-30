@@ -1,4 +1,5 @@
 /* globals GiosgClient, giosg, MooTools */
+/* jshint eqnull: true */
 (function(window) {
   'use strict';
   var BASICFIELDS = ['apiConfig', 'companyId', 'domainId', 'locationCity', 'locationCountry', 'previousPurchases', 'rooms', 'sessionUuid', 'useCanonicalUrl', 'visitCount', 'visitorCid', 'visitorGid', 'visitorId'];
@@ -46,6 +47,14 @@
     var products = this.groupCart(selectorResult, selectors, selector_items);
     console.log("CART", products);
     this.sendResponse(data.query, { products:  products });
+  };
+
+  DukePostMessageClient.prototype.on_ruleStates = function(data) {
+    var ruleEngine = window.giosg && window.giosg.ruleEngine;
+    if (ruleEngine) {
+      var ruleStates = ruleEngine._getRuleStates(null, true);
+      this.sendResponse(data.query, { ruleStates: ruleStates });
+    }
   };
 
   DukePostMessageClient.prototype.on_matchRule = function(data) {

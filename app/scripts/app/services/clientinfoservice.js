@@ -2,6 +2,7 @@
   var COMMANDS = {
     GIOSG_ENABLED: 'giosgEnabled',
     BASIC_INFO:    'basicInfo',
+    RULE_STATES:   'ruleStates',
     MATCHRULE:     'matchRule',
     RUNCART:       'runCart'
   };
@@ -38,6 +39,14 @@
         if(message.response.hasGiosg) {
           self.handleCartSettings(message.response.apiConfig);
         }
+      });
+    };
+
+    ClientInfoService.prototype.getRuleStates = function() {
+      var self = this;
+      return PortService.sendAsyncMessage({ command : COMMANDS.RULE_STATES }).
+      then(function(message) {
+        return message.response.ruleStates;
       });
     };
 
