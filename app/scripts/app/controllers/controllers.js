@@ -26,6 +26,31 @@
         self.ruleStates = ruleStates;
       });
     };
+
+  }])
+  .controller('RuleConditionController', ['$scope', 'ClientInfoService', function($scope, ClientInfoService) {
+    var self = this;
+    self.isEditing = false;
+
+    self.startEditing = function(condition) {
+      self.isEditing = true;
+      self.editedCondition = {
+        value: condition.value,
+        type: condition.type
+      };
+    };
+
+    self.stopEditing = function() {
+      self.isEditing = false;
+    };
+
+    self.submitRuleCondition = function(ruleId, conditionIndex) {
+      self.stopEditing();
+      ClientInfoService.editRuleCondition(ruleId, conditionIndex, self.editedCondition.value, self.editedCondition.type).then(function(ruleStates) {
+        // TODO: Not an elegant way to access the parent controller
+        $scope.ruleController.ruleStates = ruleStates;
+      });
+    };
   }])
   .controller('CartController', ['$scope', 'ClientInfoService', function($scope, ClientInfoService) {
       $scope.clientInfo = ClientInfoService.output;

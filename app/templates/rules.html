@@ -9,7 +9,7 @@
   </small>
 </h3>
 <div class="panel-group">
-  <div ng-repeat="ruleItem in ruleController.ruleStates" ng-init="expanded=false" class="panel" ng-class="ruleItem.state == 'active' ? 'panel-success' : ruleItem.state == 'passive' ? 'panel-danger' : 'panel-default'">
+  <div ng-repeat="ruleItem in ruleController.ruleStates track by ruleItem.rule.id || $id(ruleItem)" ng-init="expanded=false" class="panel" ng-class="ruleItem.state == 'active' ? 'panel-success' : ruleItem.state == 'passive' ? 'panel-danger' : 'panel-default'">
     <div class="panel-heading">
       <a href="javascript:void(0);" ng-click="expanded=!expanded">
         <i class="fa fa-fw" ng-class="expanded ? 'fa-caret-down' : 'fa-caret-right'"></i>
@@ -30,12 +30,23 @@
 
         <hr style="margin-top: 2px; margin-bottom: 2px;"/>
         <h5 ng-if="ruleItem.ruleConditions.length">Rule Conditions</h5>
-        <div ng-repeat="ruleCondition in ruleItem.ruleConditions">
+        <div ng-repeat="ruleCondition in ruleItem.ruleConditions" ng-controller="RuleConditionController as conditionController">
           <span class="fa fa-fw fa-check text-success" ng-show="ruleCondition.state == 'active'"></span>
           <span class="fa fa-fw fa-times text-danger" ng-show="ruleCondition.state === 'passive'"></span>
           <span class="fa fa-fw fa-question text-muted" ng-show="ruleCondition.state === 'pending'"></span>
           <span class="label" ng-class="ruleCondition.state == 'active' ? 'label-success' : ruleCondition.state == 'passive' ? 'label-danger' : 'label-default'">{{ ruleController.getConditionTypeLabel(ruleCondition.condition.type) }}</span>
-          <code ng-bind="ruleCondition.condition.value" style="white-space: pre-line;"></code>
+          <code ng-bind="ruleCondition.condition.value" style="white-space: pre-line;" ng-if-start="!conditionController.isEditing"></code>
+          <a href="javascript:void(0);" ng-click="conditionController.startEditing(ruleCondition.condition)" ng-if-end>
+            <i class="fa fa-fw fa-pencil"></i>
+            Edit
+          </a>
+          <form class="input-group" ng-submit="conditionController.submitRuleCondition(ruleItem.rule.id, $index)" name="ruleConditionForm" ng-if="conditionController.isEditing">
+            <input type="text" class="form-control" ng-model="conditionController.editedCondition.value" placeholder="No value">
+            <span class="input-group-btn">
+              <button type="submit" class="btn btn-primary" ng-disabled="ruleConditionForm.$pristine">Save</button>
+              <button type="button" class="btn btn-danger" ng-click="conditionController.stopEditing()">Cancel</button>
+            </span>
+          </form>
         </div>
         <h5 ng-if="ruleItem.commonConditions.length">Common Conditions</h5>
         <div ng-repeat="ruleCondition in ruleItem.commonConditions" ng-init="showConditionSource=false">
