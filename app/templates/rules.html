@@ -2,7 +2,12 @@
   <i class="fa fa-fw fa-refresh"></i>
   Reload
 </a>
-<h3>Rules</h3>
+<h3>
+  Rules
+  <small>
+    {{ (ruleController.ruleStates | filter:{state:'active'}).length }}/{{ ruleController.ruleStates.length }}
+  </small>
+</h3>
 <div class="panel-group">
   <div ng-repeat="ruleItem in ruleController.ruleStates" ng-init="expanded=false" class="panel" ng-class="ruleItem.state == 'active' ? 'panel-success' : ruleItem.state == 'passive' ? 'panel-danger' : 'panel-default'">
     <div class="panel-heading">
@@ -17,22 +22,22 @@
     </div>
     <div class="panel-collapse collapse" ng-class="{in: expanded}">
       <div class="panel-body">
-        <strong>Action</strong>
-        <div>
+        <h5>
+          Action
           <span class="label label-primary">{{ ruleController.getActionTypeLabel(ruleItem.rule.action.type) || "ACTION TYPE " + ruleItem.rule.action.type }}</span>
-          <code ng-show="ruleItem.rule.action.value">{{ ruleItem.rule.action.value }}</code>
-        </div>
+        </h5>
+        <pre ng-show="ruleItem.rule.action.value">{{ ruleItem.rule.action.value }}</pre>
 
         <hr style="margin-top: 2px; margin-bottom: 2px;"/>
-        <h4 ng-if="ruleItem.ruleConditions.length">Rule Conditions</h4>
+        <h5 ng-if="ruleItem.ruleConditions.length">Rule Conditions</h5>
         <div ng-repeat="ruleCondition in ruleItem.ruleConditions">
           <span class="fa fa-fw fa-check text-success" ng-show="ruleCondition.state == 'active'"></span>
           <span class="fa fa-fw fa-times text-danger" ng-show="ruleCondition.state === 'passive'"></span>
           <span class="fa fa-fw fa-question text-muted" ng-show="ruleCondition.state === 'pending'"></span>
-          <span class="label" ng-class="{'label-success': ruleCondition.state == 'active', 'label-danger': ruleCondition.state == 'passive', 'label-default': ruleCondition.state == 'pending'}">{{ ruleController.getConditionTypeLabel(ruleCondition.condition.type) }}</span>
-          <code ng-bind="ruleCondition.condition.value"></code>
+          <span class="label" ng-class="ruleCondition.state == 'active' ? 'label-success' : ruleCondition.state == 'passive' ? 'label-danger' : 'label-default'">{{ ruleController.getConditionTypeLabel(ruleCondition.condition.type) }}</span>
+          <code ng-bind="ruleCondition.condition.value" style="white-space: pre-line;"></code>
         </div>
-        <h4 ng-if="ruleItem.commonConditions.length">Common Conditions</h4>
+        <h5 ng-if="ruleItem.commonConditions.length">Common Conditions</h5>
         <div ng-repeat="ruleCondition in ruleItem.commonConditions" ng-init="showConditionSource=false">
           <span class="fa fa-fw fa-check text-success" ng-show="ruleCondition.state == 'active'"></span>
           <span class="fa fa-fw fa-times text-danger" ng-show="ruleCondition.state === 'passive'"></span>
@@ -41,7 +46,7 @@
           <a href="javascript:void(0);" ng-click="showConditionSource=false" ng-show="showConditionSource">Hide condition</a>
           <pre class="small" ng-bind="ruleCondition.condition" ng-show="showConditionSource"></pre>
         </div>
-        <h4 ng-if="ruleItem.actionConditions.length">Action Conditions</h4>
+        <h5 ng-if="ruleItem.actionConditions.length">Action Conditions</h5>
         <div ng-repeat="ruleCondition in ruleItem.actionConditions" ng-init="showConditionSource=false">
           <span class="fa fa-fw fa-check text-success" ng-show="ruleCondition.state == 'active'"></span>
           <span class="fa fa-fw fa-times text-danger" ng-show="ruleCondition.state === 'passive'"></span>
