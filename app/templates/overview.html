@@ -12,6 +12,12 @@
     <i class="fa fa-times text-danger pull-right" ng-hide="clientInfo.isCompatible"></i>
   </li>
 
+  <li class="list-group-item" ng-class="{'list-group-item-success': clientInfo.ruleEngine, 'list-group-item-warning': !clientInfo.ruleEngine}">
+    Rule Engine available
+    <i class="fa fa-check text-success pull-right" ng-show="clientInfo.ruleEngine"></i>
+    <i class="fa fa-times text-danger pull-right" ng-hide="clientInfo.ruleEngine"></i>
+  </li>
+
   <li class="list-group-item" ng-class="{'list-group-item-success': clientInfo.rooms.length, 'list-group-item-danger': !clientInfo.rooms.length}">
     Rooms connected
     <span class="pull-right" ng-class="{'text-success': clientInfo.rooms.length, 'text-danger': !clientInfo.rooms.length}"> {{ clientInfo.rooms.length || 0}} </span>

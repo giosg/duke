@@ -1,4 +1,5 @@
 /* globals GiosgClient, giosg, MooTools */
+/* jshint eqnull: true */
 (function(window) {
   'use strict';
   var BASICFIELDS = ['apiConfig', 'companyId', 'domainId', 'locationCity', 'locationCountry', 'previousPurchases', 'rooms', 'sessionUuid', 'useCanonicalUrl', 'visitCount', 'visitorCid', 'visitorGid', 'visitorId'];
@@ -48,6 +49,81 @@
     this.sendResponse(data.query, { products:  products });
   };
 
+  DukePostMessageClient.prototype.on_ruleStates = function(data) {
+    var self = this;
+    var giosg = window.giosg, ruleEngine = giosg && giosg.ruleEngine, jGiosg = window.jGiosg;
+    if (ruleEngine) {
+      // Use the new Rule Engine
+      var ruleStates = ruleEngine._getRuleStates(null, true);
+      self.sendResponse(data.query, { ruleStates: ruleStates });
+    } else if (giosg && giosg.rulesConfig && jGiosg && GiosgClient.ruleMatches) {
+      // Convert the legacy rules to the correct format
+      var rules = giosg.rulesConfig.getRules();
+      var rulePromises = [];
+      for (var i = 0; i < rules.length; i++) {
+        var rule = rules[i];
+        rulePromises.push(GiosgClient.ruleMatches(rule));
+      }
+      jGiosg.when.apply(jGiosg, rulePromises).then(function(/* matchingRules... */) {
+        var ruleStates = [];
+        var matchingRules = arguments;
+        for (var i = 0; i < matchingRules.length; i++) {
+          var ruleMatches = !!matchingRules[i];
+          var rule = rules[i];
+          var ruleConditions = [];
+          for (var j = 0; j < rule.conditions.length; j++) {
+            var condition = rule.conditions[j];
+            ruleConditions.push({
+              condition: condition
+            });
+          }
+          ruleStates.push({
+            rule: rule,
+            state: ruleMatches ? 'active' : 'passive',
+            ruleConditions: ruleConditions,
+            commonConditions: [],  // Does not exists in the old system
+            actionConditions: []  // Does not exists in the old system
+          });
+        }
+        self.sendResponse(data.query, { ruleStates: ruleStates });
+      });
+    } else {
+      self.sendResponse(data.query, { ruleStates: [] });
+    }
+  };
+
+  DukePostMessageClient.prototype.on_editRuleCondition = function(data) {
+    var self = this, giosg = window.giosg, ruleEngine = giosg && giosg.ruleEngine;
+    var ruleId = data.request.ruleId;
+    var conditionIndex = data.request.conditionIndex;
+    var newValue = data.request.value;
+    var newType = data.request.type;
+    console.log("Change " + (conditionIndex + 1) + "nth on rule #" + ruleId + " to type " + newType + " and value " + newValue);
+    if (ruleEngine && ruleId != null && conditionIndex != null) {
+      var rules = ruleEngine.getRules();
+      for (var i = 0; i < rules.length; i++) {
+        var rule = rules[i];
+        if (rule.id === ruleId) {
+          var condition = rule.conditions[conditionIndex];
+          if (condition) {
+            if (newValue !== undefined && condition.value != newValue) {
+              condition.value = newValue;
+              console.log("Changed the condition value to ", newValue);
+            }
+            if (newType !== undefined && condition.type != newType) {
+              condition.type = newType;
+              console.log("Changed the condition type to ", newType);
+            }
+          }
+        }
+      }
+      ruleEngine.refreshAllRules().always(function() {
+        var ruleStates = ruleEngine._getRuleStates(null, true);
+        self.sendResponse(data.query, { ruleStates: ruleStates });
+      });
+    }
+  };
+
   DukePostMessageClient.prototype.on_matchRule = function(data) {
     var self = this;
     GiosgClient.ruleMatches(data.request.rule).then(function(match) {
@@ -84,6 +160,7 @@
       response.ruleactionTypes = this.inverseObject(giosg.rulesConfig.actionTypes);
       response.ruleconditionTypes = this.inverseObject(giosg.rulesConfig.conditionTypes);
       response.rules = giosg.rulesConfig.getRules();
+      response.ruleEngine = !!giosg.ruleEngine;
     }
     response.isCompatible = this.checkCompatibility();
     this.sendResponse(data.query, response);
@@ -102,7 +179,7 @@
   };
 
   DukePostMessageClient.prototype.sendResponse = function(query, response) {
-    window.postMessage({ _type: 'DUKERESPONSE', query: event.data.query, response: response }, '*');
+    window.postMessage({ _type: 'DUKERESPONSE', query: query, response: response }, '*');
   };
 
   DukePostMessageClient.prototype.attachPostMessageListener = function() {
