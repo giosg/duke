@@ -12,6 +12,7 @@
   }])
   .controller('RuleController', ['$scope', 'ClientInfoService', function($scope, ClientInfoService) {
     var self = this;
+    self.clientInfo = ClientInfoService.output;
 
     self.getActionTypeLabel = function(actionType) {
       return ClientInfoService.output.ruleactionTypes[actionType];

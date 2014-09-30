@@ -35,8 +35,8 @@
           <span class="fa fa-fw fa-times text-danger" ng-show="ruleCondition.state === 'passive'"></span>
           <span class="fa fa-fw fa-question text-muted" ng-show="ruleCondition.state === 'pending'"></span>
           <span class="label" ng-class="ruleCondition.state == 'active' ? 'label-success' : ruleCondition.state == 'passive' ? 'label-danger' : 'label-default'">{{ ruleController.getConditionTypeLabel(ruleCondition.condition.type) }}</span>
-          <code ng-bind="ruleCondition.condition.value" style="white-space: pre-line;" ng-if-start="!conditionController.isEditing"></code>
-          <a href="javascript:void(0);" ng-click="conditionController.startEditing(ruleCondition.condition)" ng-if-end>
+          <code ng-bind="ruleCondition.condition.value" style="white-space: pre-line;" ng-if="!conditionController.isEditing"></code>
+          <a href="javascript:void(0);" ng-click="conditionController.startEditing(ruleCondition.condition)" ng-if="ruleController.clientInfo.ruleEngine &amp;&amp; !conditionController.isEditing">
             <i class="fa fa-fw fa-pencil"></i>
             Edit
           </a>
