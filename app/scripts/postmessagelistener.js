@@ -182,6 +182,11 @@
     window.postMessage({ _type: 'DUKERESPONSE', query: query, response: response }, '*');
   };
 
+  DukePostMessageClient.prototype.sendMessage = function(msgType /* , msgParams */) {
+    var msgArgs = Array.prototype.slice.call(arguments, 1);
+    window.postMessage({ _type: 'DUKEMESSAGE', msgType: msgType, msgArgs: msgArgs }, '*');
+  };
+
   DukePostMessageClient.prototype.attachPostMessageListener = function() {
     var self = this;
     window.addEventListener('message', function(evt) { self.onPostMessage(evt); }, false);

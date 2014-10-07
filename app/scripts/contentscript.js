@@ -17,9 +17,8 @@
     // We only accept messages from ourselves
     if (event.source != window)
       return;
-    if (event.data._type && (event.data._type == "DUKERESPONSE")) {
-      console.log("RESOLVING QUERY ", event.data.query);
-      console.log("WITH RESPONSE", event.data.response);
+    var type = event.data && event.data._type;
+    if (type == "DUKERESPONSE" || type == "DUKEMESSAGE") {
       this.port.postMessage(event.data);
     }
   };
