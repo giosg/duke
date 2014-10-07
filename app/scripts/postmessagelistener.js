@@ -1,6 +1,6 @@
 /* globals GiosgClient, giosg, MooTools */
 /* jshint eqnull: true */
-(function(window) {
+(function(window, _giosg) {
   'use strict';
   var BASICFIELDS = ['apiConfig', 'companyId', 'domainId', 'locationCity', 'locationCountry', 'previousPurchases', 'rooms', 'sessionUuid', 'useCanonicalUrl', 'visitCount', 'visitorCid', 'visitorGid', 'visitorId'];
 
@@ -194,4 +194,23 @@
 
   var client = new DukePostMessageClient();
   client.attachPostMessageListener();
-})(window);
+
+  function onGiosgApiReady() {
+    // Giosg API is now ready!
+    var giosg = window.giosg, ruleEngine = giosg && giosg.ruleEngine;
+    if (ruleEngine) {
+      ruleEngine.onRefreshStart(function() {
+        client.sendMessage('ruleStateChange', ruleEngine._getRuleStates(null, true));
+      });
+      ruleEngine.onRefreshEnd(function() {
+        client.sendMessage('ruleStateChange', ruleEngine._getRuleStates(null, true));
+      });
+    }
+  }
+
+  // If the _giosg function is available then use it to attach listeners to the public giosg API
+  if (typeof _giosg === 'function') {
+    _giosg(onGiosgApiReady);
+  }
+
+})(window, window._giosg);
