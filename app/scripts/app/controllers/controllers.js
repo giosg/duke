@@ -10,7 +10,7 @@
         ClientInfoService.getBasicInfo();
       };
   }])
-  .controller('RuleController', ['$scope', 'ClientInfoService', function($scope, ClientInfoService) {
+  .controller('RuleController', ['$scope', 'ClientInfoService', 'PortService', function($scope, ClientInfoService, PortService) {
     var self = this;
     self.clientInfo = ClientInfoService.output;
 
@@ -27,6 +27,12 @@
         self.ruleStates = ruleStates;
       });
     };
+
+    // Listen for rule state changes and unlisten when the $scope gets destroyed
+    var unlistenRules = PortService.onMessage('ruleStateChange', function(ruleStates) {
+      self.ruleStates = ruleStates;
+    });
+    $scope.$on('$destroy', unlistenRules);
 
   }])
   .controller('RuleConditionController', ['$scope', 'ClientInfoService', function($scope, ClientInfoService) {
