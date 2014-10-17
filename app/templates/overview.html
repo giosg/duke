@@ -12,7 +12,7 @@
     <i class="fa fa-times text-danger pull-right" ng-hide="clientInfo.isCompatible"></i>
   </li>
 
-  <li class="list-group-item" ng-class="{'list-group-item-success': clientInfo.ruleEngine, 'list-group-item-warning': !clientInfo.ruleEngine}">
+  <li class="list-group-item" ng-class="clientInfo.ruleEngine ? 'list-group-item-success' : 'list-group-item-danger'">
     Rule Engine available
     <i class="fa fa-check text-success pull-right" ng-show="clientInfo.ruleEngine"></i>
     <i class="fa fa-times text-danger pull-right" ng-hide="clientInfo.ruleEngine"></i>
