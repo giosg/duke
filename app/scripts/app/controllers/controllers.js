@@ -28,6 +28,23 @@
       });
     };
 
+    self.getRulePanelClass = function(ruleItem) {
+      if (ruleItem.state == 'pending') {
+        return 'panel-default';
+      }
+      else if (ruleItem.evented) {
+        // Use 'danger' class if there is at least one non-matching condition that is not event condition
+        var cannotMatch = _.some(ruleItem.ruleConditions.concat(ruleItem.commonConditions).concat(ruleItem.actionConditions), function(condition) {
+          return !condition.evented && condition.state == 'passive';
+        });
+        return cannotMatch ? 'panel-danger' : 'panel-info';
+      }
+      else if (ruleItem.state == 'active') {
+        return 'panel-success';
+      }
+      return 'panel-danger';
+    };
+
     // Listen for rule state changes and unlisten when the $scope gets destroyed
     var unlistenRules = PortService.onMessage('ruleStateChange', function(ruleStates) {
       self.ruleStates = ruleStates;
