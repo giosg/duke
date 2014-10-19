@@ -3,7 +3,7 @@
   'use strict';
 
   angular.module('popup.services')
-  .factory('PortService', ['$rootScope', '$q', function($rootScope, $q) {
+  .factory('PortService', ['$rootScope', '$q', '$log', function($rootScope, $q, $log) {
 
     function PortService() {
       this.port = null;
@@ -27,11 +27,33 @@
 
     PortService.prototype.onPortMessage = function(message) {
       var self = this;
-      $rootScope.$evalAsync(function() {
-        if(self.queries[message.query]) {
-          self.queries[message.query].resolve(message);
-          delete self.queries[message.query];
+      if (message._type == "DUKERESPONSE") {
+        $rootScope.$evalAsync(function() {
+          if(self.queries[message.query]) {
+            $log.log("[Duke.PortService] Got response to query", message.query, "with message", message);
+            self.queries[message.query].resolve(message);
+            delete self.queries[message.query];
+          }
+        });
+      }
+      else if (message._type == "DUKEMESSAGE") {
+        var msgType = message.msgType;
+        var msgArgs = message.msgArgs || [];
+        if (msgType) {
+          $rootScope.$evalAsync(function() {
+            $log.log("[Duke.PortService] Got port message", msgType, "with arguments", msgArgs);
+            $rootScope.$emit('portMessage:' + msgType, msgArgs);
+          });
         }
+      }
+    };
+
+    /**
+     * Attachs a message listener. Returns the unlistener funcition.
+     */
+    PortService.prototype.onMessage = function(msgType, listener) {
+      return $rootScope.$on('portMessage:' + msgType, function(event, msgArgs) {
+        listener.apply(this, msgArgs);
       });
     };
 
