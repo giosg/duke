@@ -2,13 +2,9 @@
 
 (function(angular, chrome) {
    angular.module('popup')
-  .controller('MainController', ['$scope', function($scope) {
-  }])
   .controller('OverViewController', ['$scope', 'ClientInfoService', function($scope, ClientInfoService) {
       $scope.clientInfo = ClientInfoService.output;
-      $scope.getBasicInfo = function() {
-        ClientInfoService.getBasicInfo();
-      };
+      ClientInfoService.getBasicInfo();
   }])
   .controller('RuleController', ['$scope', 'ClientInfoService', 'PortService', function($scope, ClientInfoService, PortService) {
     var self = this;
@@ -51,6 +47,7 @@
     });
     $scope.$on('$destroy', unlistenRules);
 
+    self.loadRuleStates();
   }])
   .controller('RuleConditionController', ['$scope', 'ClientInfoService', function($scope, ClientInfoService) {
     var self = this;
@@ -79,8 +76,6 @@
   .controller('CartController', ['$scope', 'ClientInfoService', function($scope, ClientInfoService) {
       $scope.clientInfo = ClientInfoService.output;
 
-      $scope.runCart = function() {
-        ClientInfoService.runCart();
-      };
+      ClientInfoService.runCart();
   }]);
 })(angular, chrome);
