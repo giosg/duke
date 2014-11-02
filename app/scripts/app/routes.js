@@ -11,17 +11,35 @@
       .state('overview', {
         url: '/overview',
         templateUrl: 'templates/overview.html',
-        controller: 'OverViewController'
+        controller: 'OverViewController',
+        resolve: {
+          clientInfo: ['ClientInfoService', function(ClientInfoService) {
+            return ClientInfoService.getBasicInfo();
+          }]
+        }
       })
       .state('rules', {
         url: '/rules',
         templateUrl: 'templates/rules.html',
-        controller: 'RuleController as ruleController'
+        controller: 'RuleController as ruleController',
+        resolve: {
+          ruleStates: ['ClientInfoService', function(ClientInfoService) {
+            return ClientInfoService.getRuleStates();
+          }]
+        }
       })
       .state('cart', {
         url: '/cart',
         templateUrl: 'templates/cart.html',
-        controller: 'CartController'
+        controller: 'CartController',
+        resolve: {
+          clientInfo: ['ClientInfoService', function(ClientInfoService) {
+            return ClientInfoService.getBasicInfo().then(function(clientInfo) {
+              ClientInfoService.runCart();
+              return clientInfo;
+            });
+          }]
+        }
       })
     ;
   }]);

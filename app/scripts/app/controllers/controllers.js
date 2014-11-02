@@ -2,12 +2,15 @@
 
 (function(angular, chrome) {
    angular.module('popup')
-  .controller('OverViewController', ['$scope', 'ClientInfoService', function($scope, ClientInfoService) {
-      $scope.clientInfo = ClientInfoService.output;
-      ClientInfoService.getBasicInfo();
+  .controller('OverViewController', ['$scope', 'clientInfo', function($scope, clientInfo) {
+      $scope.clientInfo = clientInfo;
   }])
-  .controller('RuleController', ['$scope', 'ClientInfoService', 'PortService', function($scope, ClientInfoService, PortService) {
+  .controller('RuleController', [
+              'ruleStates', '$scope', 'ClientInfoService', 'PortService',
+              function(ruleStates, $scope, ClientInfoService, PortService) {
+
     var self = this;
+    self.ruleStates = ruleStates;
     self.clientInfo = ClientInfoService.output;
 
     self.getActionTypeLabel = function(actionType) {
@@ -16,12 +19,6 @@
 
     self.getConditionTypeLabel = function(conditionType) {
       return ClientInfoService.output.ruleconditionTypes[conditionType];
-    };
-
-    self.loadRuleStates = function() {
-      ClientInfoService.getRuleStates().then(function(ruleStates) {
-        self.ruleStates = ruleStates;
-      });
     };
 
     self.getRulePanelClass = function(ruleItem) {
@@ -46,8 +43,6 @@
       self.ruleStates = ruleStates;
     });
     $scope.$on('$destroy', unlistenRules);
-
-    self.loadRuleStates();
   }])
   .controller('RuleConditionController', ['$scope', 'ClientInfoService', function($scope, ClientInfoService) {
     var self = this;
@@ -73,9 +68,7 @@
       });
     };
   }])
-  .controller('CartController', ['$scope', 'ClientInfoService', function($scope, ClientInfoService) {
-      $scope.clientInfo = ClientInfoService.output;
-
-      ClientInfoService.runCart();
+  .controller('CartController', ['$scope', 'clientInfo', function($scope, clientInfo) {
+      $scope.clientInfo = clientInfo;
   }]);
 })(angular, chrome);
