@@ -6,8 +6,8 @@
       $scope.clientInfo = clientInfo;
   }])
   .controller('RuleController', [
-              'ruleStates', '$scope', 'ClientInfoService', 'PortService',
-              function(ruleStates, $scope, ClientInfoService, PortService) {
+              'ruleStates', '$scope', 'ClientInfoService', 'PortService', '$state',
+              function(ruleStates, $scope, ClientInfoService, PortService, $state) {
 
     var self = this;
     self.ruleStates = ruleStates;
@@ -36,6 +36,10 @@
         return 'panel-success';
       }
       return 'panel-danger';
+    };
+
+    self.reload = function() {
+      return $state.go('rules', null, {reload: true});
     };
 
     // Listen for rule state changes and unlisten when the $scope gets destroyed
