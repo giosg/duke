@@ -70,5 +70,13 @@
   }])
   .controller('CartController', ['$scope', 'clientInfo', function($scope, clientInfo) {
       $scope.clientInfo = clientInfo;
+  }])
+  .controller('LoadMaskController', ['$scope', '$state', function($scope, $state) {
+    var self = this;
+    $scope.$watch(function() {
+      return !!$state.transition;
+    }, function(isVisible) {
+      self.isVisible = isVisible;
+    });
   }]);
 })(angular, chrome);
