@@ -4,7 +4,9 @@
 
   // Declare app level module which depends on filters, and services
   angular.module('popup', [
+    'ui.router',
+    'ui.bootstrap',
     'popup.services',
-    'ui.bootstrap'
+    'popup.routes'
   ]);
 })(angular);

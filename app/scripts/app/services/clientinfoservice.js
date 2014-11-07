@@ -40,6 +40,7 @@
         if(message.response.hasGiosg) {
           self.handleCartSettings(message.response.apiConfig);
         }
+        return self.output;
       });
     };
 

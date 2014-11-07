@@ -13,43 +13,39 @@
   </head>
 
   <body>
-
-    <div ng-controller="MainController">
-      <tabset>
-        <tab ng-controller="OverViewController" select="getBasicInfo()">
-          <tab-heading>
-            <i class="fa fa-eye"></i> Overview
-          </tab-heading>
-          <div ng-include="'templates/overview.html'"></div>
-        </tab>
-        <tab ng-controller="RuleController as ruleController" select="ruleController.loadRuleStates()">
-          <tab-heading>
-            <i class="fa fa-cogs"></i> Rules
-          </tab-heading>
-          <div ng-include="'templates/rules.html'"></div>
-        </tab>
-
-        <tab ng-controller="CartController" select="runCart()">
-          <tab-heading>
-            <i class="fa fa-shopping-cart"></i> Cart
-          </tab-heading>
-          <div ng-repeat="product in clientInfo.cartProducts">
-          {{ product.name }}
-          <span class="label label-success">{{ product.price }}</span>
-        </div>
-        </tab>
-
-      </tabset>
-
+    <ul class="nav nav-tabs">
+      <li ui-sref-active="active">
+        <a ui-sref="overview" href>
+          <i class="fa fa-fw fa-eye"></i> Overview
+        </a>
+      </li>
+      <li ui-sref-active="active">
+        <a ui-sref="rules" href>
+          <i class="fa fa-fw fa-cogs"></i> Rules
+        </a>
+      </li>
+      <li ui-sref-active="active">
+        <a ui-sref="cart" href>
+          <i class="fa fa-fw fa-shopping-cart"></i> Cart
+        </a>
+      </li>
+    </ul>
+    <div ui-view></div>
+    <div class="load-mask" ng-controller="LoadMaskController as loadMask" ng-show="loadMask.isVisible">
+      <div class="load-mask-inner">
+        <i class="fa fa-fw fa-gear fa-spin"></i>
+      </div>
     </div>
     <!-- build:js popup.js -->
     <script src="bower_components/jquery/dist/jquery.min.js"></script>
     <script src="bower_components/underscore/underscore.js"></script>
     <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
     <script src="bower_components/angular/angular.min.js"></script>
+    <script src="bower_components/angular-ui-router/release/angular-ui-router.js"></script>
     <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
     <script type="text/javascript" src="/scripts/app/modules/angular-underscore.min.js"></script>
     <script src="scripts/app/app.js"></script>
+    <script src="scripts/app/routes.js"></script>
     <script src="scripts/app/controllers/controllers.js"></script>
     <script src="scripts/app/services/services.js"></script>
     <script src="scripts/app/services/portservice.js"></script>
