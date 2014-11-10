@@ -22,20 +22,28 @@
     };
 
     self.getRulePanelClass = function(ruleItem) {
+      return 'panel-' + self.getRuleClassSuffix(ruleItem);
+    };
+
+    self.getRuleLabelClass = function(ruleItem) {
+      return 'label-' + self.getRuleClassSuffix(ruleItem);
+    };
+
+    self.getRuleClassSuffix = function(ruleItem) {
       if (ruleItem.state == 'pending') {
-        return 'panel-default';
+        return 'default';
       }
       else if (ruleItem.evented) {
         // Use 'danger' class if there is at least one non-matching condition that is not event condition
         var cannotMatch = _.some(ruleItem.ruleConditions.concat(ruleItem.commonConditions).concat(ruleItem.actionConditions), function(condition) {
           return !condition.evented && condition.state == 'passive';
         });
-        return cannotMatch ? 'panel-danger' : 'panel-info';
+        return cannotMatch ? 'danger' : 'info';
       }
       else if (ruleItem.state == 'active') {
-        return 'panel-success';
+        return 'success';
       }
-      return 'panel-danger';
+      return 'danger';
     };
 
     self.reload = function() {
