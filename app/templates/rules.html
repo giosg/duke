@@ -36,6 +36,11 @@
           <i class="fa fa-fw fa-user"></i>
           Rule can match only once <strong>for visitor</strong>
         </div>
+        <h5>Target rooms:</h5>
+        <p class="text-success" ng-if="ruleItem.rule.targetAnyRoom">Any room</p>
+        <p ng-if="!ruleItem.rule.targetAnyRoom">
+          <code ng-repeat-start="roomUuid in ruleItem.rule.targetRooms" ng-bind="roomUuid"></code><span ng-repeat-end ng-if="!$last">, </span>
+        </p>
         <h5>
           Action:
           <strong class="text-primary" ng-bind="ruleController.getActionTypeLabel(ruleItem.rule.action.type) || 'ACTION TYPE ' + ruleItem.rule.action.type"></strong>
