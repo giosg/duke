@@ -57,7 +57,7 @@
        * Find the first block comment inside the condition string and use its contents as a title.
        * This also ignores any leading '!', used to avoid JS comment removal on obfuscation.
        */
-      var match = /\/\*\!\s*(.+?)\s*\*\//.exec(condition);
+      var match = /\/\*\!?\s*(.+?)\s*\*\//.exec(condition);
       return match ? match[1] : "[Custom condition]";
     };
 
