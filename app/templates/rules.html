@@ -24,6 +24,18 @@
     </div>
     <div class="panel-collapse collapse" ng-class="{in: expanded}">
       <div class="panel-body">
+        <div ng-if="ruleItem.rule.matchOnceOnPage" class="text-warning">
+          <i class="fa fa-fw fa-file-o"></i>
+          Rule can match only once <strong>on page</strong>
+        </div>
+        <div ng-if="ruleItem.rule.matchOnceInSession" class="text-warning">
+          <i class="fa fa-fw fa-clock-o"></i>
+          Rule can match only once <strong>in session</strong>
+        </div>
+        <div ng-if="ruleItem.rule.matchOnceForVisitor" class="text-warning">
+          <i class="fa fa-fw fa-user"></i>
+          Rule can match only once <strong>for visitor</strong>
+        </div>
         <h5>
           Action
           <span class="label label-primary">{{ ruleController.getActionTypeLabel(ruleItem.rule.action.type) || "ACTION TYPE " + ruleItem.rule.action.type }}</span>
