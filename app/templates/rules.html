@@ -40,6 +40,7 @@
         <p class="text-success" ng-if="ruleItem.rule.targetAnyRoom">Any room</p>
         <p ng-if="!ruleItem.rule.targetAnyRoom">
           <code ng-repeat-start="roomUuid in ruleItem.rule.targetRooms" ng-bind="roomUuid"></code><span ng-repeat-end ng-if="!$last">, </span>
+          <em class="text-danger" ng-if="!ruleItem.rule.targetRooms.length">No rooms</em>
         </p>
         <h5>
           Action:
