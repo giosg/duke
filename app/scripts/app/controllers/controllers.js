@@ -14,11 +14,13 @@
     self.clientInfo = ClientInfoService.output;
 
     self.getActionTypeLabel = function(actionType) {
-      return ClientInfoService.output.ruleactionTypes[actionType];
+      var label = ClientInfoService.output.ruleactionTypes[actionType];
+      return label && label.replace(/_/g, ' ');
     };
 
     self.getConditionTypeLabel = function(conditionType) {
-      return ClientInfoService.output.ruleconditionTypes[conditionType];
+      var label = ClientInfoService.output.ruleconditionTypes[conditionType];
+      return label && label.replace(/_/g, ' ');
     };
 
     self.getRulePanelClass = function(ruleItem) {

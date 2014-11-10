@@ -37,8 +37,8 @@
           Rule can match only once <strong>for visitor</strong>
         </div>
         <h5>
-          Action
-          <span class="label label-primary">{{ ruleController.getActionTypeLabel(ruleItem.rule.action.type) || "ACTION TYPE " + ruleItem.rule.action.type }}</span>
+          Action:
+          <strong class="text-primary" ng-bind="ruleController.getActionTypeLabel(ruleItem.rule.action.type) || 'ACTION TYPE ' + ruleItem.rule.action.type"></strong>
         </h5>
         <pre ng-show="ruleItem.rule.action.value">{{ ruleItem.rule.action.value }}</pre>
 
@@ -49,7 +49,7 @@
           <span class="fa fa-fw fa-check text-success" ng-show="ruleCondition.state == 'active'" ng-if-start="!ruleCondition.evented" tooltip="Condition matches!" tooltip-placement="right"></span>
           <span class="fa fa-fw fa-times text-danger" ng-show="ruleCondition.state === 'passive'" tooltip="Condition does not match" tooltip-placement="right"></span>
           <span class="fa fa-fw fa-question text-muted" ng-show="ruleCondition.state === 'pending'" ng-if-end tooltip="Condition is being checked&hellip;" tooltip-placement="right"></span>
-          <span class="label" ng-class="ruleCondition.evented ? 'label-info' : ruleCondition.state == 'active' ? 'label-success' : ruleCondition.state == 'passive' ? 'label-danger' : 'label-default'">{{ ruleController.getConditionTypeLabel(ruleCondition.condition.type) }}</span>
+          <strong ng-class="ruleCondition.evented ? 'text-info' : ruleCondition.state == 'active' ? 'text-success' : ruleCondition.state == 'passive' ? 'text-danger' : 'text-default'" ng-bind="ruleController.getConditionTypeLabel(ruleCondition.condition.type)"></strong>
           <span ng-if="ruleCondition.condition.negate">does <strong>NOT</strong> match</span>
           <span ng-if="!ruleCondition.condition.negate">matches</span>
           <code ng-bind="ruleCondition.condition.value" style="white-space: pre-line;" ng-if="!conditionController.isEditing"></code>
