@@ -50,6 +50,8 @@
           <span class="fa fa-fw fa-times text-danger" ng-show="ruleCondition.state === 'passive'" tooltip="Condition does not match" tooltip-placement="right"></span>
           <span class="fa fa-fw fa-question text-muted" ng-show="ruleCondition.state === 'pending'" ng-if-end tooltip="Condition is being checked&hellip;" tooltip-placement="right"></span>
           <span class="label" ng-class="ruleCondition.evented ? 'label-info' : ruleCondition.state == 'active' ? 'label-success' : ruleCondition.state == 'passive' ? 'label-danger' : 'label-default'">{{ ruleController.getConditionTypeLabel(ruleCondition.condition.type) }}</span>
+          <span ng-if="ruleCondition.condition.negate">does <strong>NOT</strong> match</span>
+          <span ng-if="!ruleCondition.condition.negate">matches</span>
           <code ng-bind="ruleCondition.condition.value" style="white-space: pre-line;" ng-if="!conditionController.isEditing"></code>
           <a href="javascript:void(0);" ng-click="conditionController.startEditing(ruleCondition.condition)" ng-if="ruleController.clientInfo.ruleEngine &amp;&amp; !conditionController.isEditing">
             <i class="fa fa-fw fa-pencil"></i>
