@@ -33,6 +33,9 @@
     <span class="pull-right" ng-class="{'text-success': clientInfo.enabledCartSelectors.length, 'text-danger': !clientInfo.enabledCartSelectors.length}"> {{ clientInfo.enabledCartSelectors.length || 0 }} </span>
   </li>
 </ul>
+<button class="btn btn-info btn-sm" ng-click="showButton()"><i class="fa fa-plus"></i> Show Chat button</button>
+<button class="btn btn-info btn-sm" ng-click="showClient()"><i class="fa fa-plus"></i> Show Chat window</button>
+
 <h3>Technical info</h3>
 <strong>Company ID</strong>  <kbd ng-show="clientInfo.companyId">{{ clientInfo.companyId }}</kbd><br />
 <strong>Domain ID</strong>   <kbd ng-show="clientInfo.domainId">{{ clientInfo.domainId  }}</kbd><br />

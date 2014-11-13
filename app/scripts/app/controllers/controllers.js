@@ -2,13 +2,18 @@
 
 (function(angular, chrome) {
    angular.module('popup')
-  .controller('OverViewController', ['$scope', 'clientInfo', function($scope, clientInfo) {
+  .controller('OverViewController', ['$scope', 'clientInfo', 'ClientInfoService', function($scope, clientInfo, ClientInfoService) {
       $scope.clientInfo = clientInfo;
+      $scope.showClient = function() {
+        ClientInfoService.showClient();
+      };
+      $scope.showButton = function() {
+        ClientInfoService.showButton();
+      };
   }])
   .controller('RuleController', [
               'ruleStates', '$scope', 'ClientInfoService', 'PortService', '$state',
               function(ruleStates, $scope, ClientInfoService, PortService, $state) {
-
     var self = this;
     self.ruleStates = ruleStates;
     self.clientInfo = ClientInfoService.output;

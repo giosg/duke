@@ -45,7 +45,6 @@
     var selector_items = giosg.api.shoppingCart._getUsedSelectors(selectors);
     var selectorResult = this.runSelectors(selectors, selector_items);
     var products = this.groupCart(selectorResult, selectors, selector_items);
-    console.log("CART", products);
     this.sendResponse(data.query, { products:  products });
   };
 
@@ -166,6 +165,17 @@
     this.sendResponse(data.query, response);
   };
 
+  DukePostMessageClient.prototype.on_showClient = function(data) {
+    GiosgClient.createChatDialog();
+    GiosgClient.showClient();
+    this.sendResponse(data.query, {});
+  };
+
+  DukePostMessageClient.prototype.on_showButton = function(data) {
+    GiosgClient._createChatButton();
+    GiosgClient.showChatButton();
+    this.sendResponse(data.query, {});
+  };
 
   DukePostMessageClient.prototype.onPostMessage = function(event) {
     if (event.source != window)

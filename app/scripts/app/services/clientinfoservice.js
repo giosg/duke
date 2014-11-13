@@ -5,7 +5,9 @@
     RULE_STATES:   'ruleStates',
     EDIT_RULE_CONDITION: 'editRuleCondition',
     MATCHRULE:     'matchRule',
-    RUNCART:       'runCart'
+    RUNCART:       'runCart',
+    SHOWCLIENT:    'showClient',
+    SHOWBUTTON:    'showButton'
   };
 
   angular.module('popup.services')
@@ -77,8 +79,17 @@
       var self = this;
       return PortService.sendAsyncMessage({ command : COMMANDS.RUNCART }).
       then(function(message) {
+        console.log(message);
         self.output.cartProducts = message.response.products;
       });
+    };
+
+    ClientInfoService.prototype.showClient  = function() {
+      return PortService.sendAsyncMessage({ command : COMMANDS.SHOWCLIENT });
+    };
+
+    ClientInfoService.prototype.showButton  = function() {
+      return PortService.sendAsyncMessage({ command : COMMANDS.SHOWBUTTON });
     };
 
     var service = new ClientInfoService();
