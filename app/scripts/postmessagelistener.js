@@ -8,44 +8,11 @@
   function DukePostMessageClient() {
   }
 
-  DukePostMessageClient.prototype.runSelectors = function(selectors, selector_items) {
-    var results = [];
-    for(var i = 0; i < selector_items.length; i++) {
-      var item = selector_items[i];
-      var type = parseInt(selectors[item].type, 10);
-      var selector = selectors[item].val;
-
-      if (type == 1) { // Css selector
-        results[item] = giosg.api.shoppingCart._runCssSelector(selector);
-      }
-    }
-    return results;
-  };
-
-  DukePostMessageClient.prototype.groupCart = function(results, selectors, selector_items) {
-    var products = [];
-    if (results.name) {
-      for (var x = 0; x < results.name.length; x++) {
-        var prod_row = {};
-        for ( var n = 0; n < selector_items.length; n++) {
-          var item = selector_items[n];
-          if (results[item]) {
-            if (results.name.length != results[item].length) break;
-            prod_row[item] = results[item][x];
-          }
-        }
-        products.push(prod_row);
-      }
-    }
-    return products;
-  };
 
   DukePostMessageClient.prototype.on_runCart = function(data) {
-    var selectors = giosg.apiConfig.cartSelectors;
-    var selector_items = giosg.api.shoppingCart._getUsedSelectors(selectors);
-    var selectorResult = this.runSelectors(selectors, selector_items);
-    var products = this.groupCart(selectorResult, selectors, selector_items);
-    this.sendResponse(data.query, { products:  products });
+    var lastCartData = giosg.api.shoppingCart._previous_data_string;
+    var cart = lastCartData ? JSON.parse(lastCartData) : {};
+    this.sendResponse(data.query, { cart: cart });
   };
 
   DukePostMessageClient.prototype.on_ruleStates = function(data) {

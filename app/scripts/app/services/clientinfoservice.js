@@ -79,8 +79,7 @@
       var self = this;
       return PortService.sendAsyncMessage({ command : COMMANDS.RUNCART }).
       then(function(message) {
-        console.log(message);
-        self.output.cartProducts = message.response.products;
+        self.output.cart = message.response.cart;
       });
     };
 

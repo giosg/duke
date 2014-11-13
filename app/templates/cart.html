@@ -1,4 +1,27 @@
-<div ng-repeat="product in clientInfo.cartProducts">
-  {{ product.name }}
-  <span class="label label-success">{{ product.price }}</span>
-</div>
+<a href="javascript:void(0);" class="pull-right" ng-click="runCart()">
+  <i class="fa fa-fw fa-refresh"></i>
+  Reload
+</a>
+<h3>Info</h3>
+<table class="table table-condensed">
+  <tr>
+    <th>Currency</th>
+    <th><span class="text text-primary">{{ clientInfo.cart.currency }}</span></th>
+  </tr>
+  <tr>
+    <th>Total price</th>
+    <th><span class="text text-primary">{{ clientInfo.cart.total_price || 0}} {{ clientInfo.cart.currency }}</span></th>
+  </tr>
+  <tr>
+    <th>Total monthly price</th>
+    <th><span class="text text-primary">{{ clientInfo.cart.monthly_total_price || 0}} {{ clientInfo.cart.currency }}</span></th>
+  </tr>
+</table>
+
+<h3>Products</h3>
+<table class="table table-condensed">
+  <tr ng-repeat="product in clientInfo.cart.products">
+    <td>{{ product.name }}</td>
+    <td><span class="label label-success">{{ product.price }}</span></td>
+  </tr>
+</table>
