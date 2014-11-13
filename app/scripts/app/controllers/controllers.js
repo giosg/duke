@@ -77,8 +77,12 @@
       });
     };
   }])
-  .controller('CartController', ['$scope', 'clientInfo', function($scope, clientInfo) {
-      $scope.clientInfo = clientInfo;
+  .controller('CartController', ['$scope', '$state', 'cart',  function($scope, $state, cart) {
+      var self = this;
+      self.cart = cart;
+      self.reload = function() {
+        return $state.go('cart', null, {reload: true});
+      };
   }])
   .controller('LoadMaskController', ['$scope', '$state', function($scope, $state) {
     var self = this;

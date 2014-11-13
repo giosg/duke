@@ -79,7 +79,7 @@
       var self = this;
       return PortService.sendAsyncMessage({ command : COMMANDS.RUNCART }).
       then(function(message) {
-        self.output.cart = message.response.cart;
+        return message.response.cart;
       });
     };
 

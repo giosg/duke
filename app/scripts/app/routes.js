@@ -31,13 +31,10 @@
       .state('cart', {
         url: '/cart',
         templateUrl: 'templates/cart.html',
-        controller: 'CartController',
+        controller: 'CartController as cartController',
         resolve: {
-          clientInfo: ['ClientInfoService', function(ClientInfoService) {
-            return ClientInfoService.getBasicInfo().then(function(clientInfo) {
-              ClientInfoService.runCart();
-              return clientInfo;
-            });
+          cart: ['ClientInfoService', function(ClientInfoService) {
+            return ClientInfoService.runCart();
           }]
         }
       })
