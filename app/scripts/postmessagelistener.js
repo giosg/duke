@@ -11,7 +11,7 @@
 
   DukePostMessageClient.prototype.on_runCart = function(data) {
     var lastCartData = giosg.api.shoppingCart._previous_data_string;
-    var cart = lastCartData ? JSON.parse(lastCartData) : {};
+    var cart = lastCartData ? JSON.parse(lastCartData) : {};
     this.sendResponse(data.query, { cart: cart });
   };
 
