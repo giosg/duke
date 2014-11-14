@@ -20,32 +20,51 @@
     self.clientInfo = ClientInfoService.output;
 
     self.getActionTypeLabel = function(actionType) {
-      return ClientInfoService.output.ruleactionTypes[actionType];
+      var label = ClientInfoService.output.ruleactionTypes[actionType];
+      return label && label.replace(/_/g, ' ');
     };
 
     self.getConditionTypeLabel = function(conditionType) {
-      return ClientInfoService.output.ruleconditionTypes[conditionType];
+      var label = ClientInfoService.output.ruleconditionTypes[conditionType];
+      return label && label.replace(/_/g, ' ');
     };
 
     self.getRulePanelClass = function(ruleItem) {
+      return 'panel-' + self.getRuleClassSuffix(ruleItem);
+    };
+
+    self.getRuleLabelClass = function(ruleItem) {
+      return 'label-' + self.getRuleClassSuffix(ruleItem);
+    };
+
+    self.getRuleClassSuffix = function(ruleItem) {
       if (ruleItem.state == 'pending') {
-        return 'panel-default';
+        return 'default';
       }
       else if (ruleItem.evented) {
         // Use 'danger' class if there is at least one non-matching condition that is not event condition
         var cannotMatch = _.some(ruleItem.ruleConditions.concat(ruleItem.commonConditions).concat(ruleItem.actionConditions), function(condition) {
           return !condition.evented && condition.state == 'passive';
         });
-        return cannotMatch ? 'panel-danger' : 'panel-info';
+        return cannotMatch ? 'danger' : 'info';
       }
       else if (ruleItem.state == 'active') {
-        return 'panel-success';
+        return 'success';
       }
-      return 'panel-danger';
+      return 'danger';
     };
 
     self.reload = function() {
       return $state.go('rules', null, {reload: true});
+    };
+
+    self.getConditionTitle = function(condition) {
+      /*
+       * Find the first block comment inside the condition string and use its contents as a title.
+       * This also ignores any leading '!', used to avoid JS comment removal on obfuscation.
+       */
+      var match = /\/\*\!?\s*(.+?)\s*\*\//.exec(condition);
+      return match ? match[1] : "[Custom condition]";
     };
 
     // Listen for rule state changes and unlisten when the $scope gets destroyed

@@ -11,8 +11,9 @@
 <div class="panel-group">
   <div ng-repeat="ruleItem in ruleController.ruleStates track by ruleItem.rule.id || $id(ruleItem)" ng-init="expanded=false" class="panel" ng-class="ruleController.getRulePanelClass(ruleItem)">
     <div class="panel-heading">
+      <i class="fa fa-fw" ng-class="expanded ? 'fa-caret-down' : 'fa-caret-right'"></i>
+      <span class="label" ng-class="ruleController.getRuleLabelClass(ruleItem)" ng-if="ruleItem.rule.autoCreated" title="This rule was automatically created">Auto</span>
       <a href="javascript:void(0);" ng-click="expanded=!expanded">
-        <i class="fa fa-fw" ng-class="expanded ? 'fa-caret-down' : 'fa-caret-right'"></i>
         {{ ruleItem.rule.name }}
         <em ng-if="!ruleItem.rule.name">(Unnamed rule)</em>
       </a>
@@ -23,9 +24,27 @@
     </div>
     <div class="panel-collapse collapse" ng-class="{in: expanded}">
       <div class="panel-body">
+        <div ng-if="ruleItem.rule.matchOnceOnPage" class="text-warning">
+          <i class="fa fa-fw fa-file-o"></i>
+          Rule can match only once <strong>on page</strong>
+        </div>
+        <div ng-if="ruleItem.rule.matchOnceInSession" class="text-warning">
+          <i class="fa fa-fw fa-clock-o"></i>
+          Rule can match only once <strong>in session</strong>
+        </div>
+        <div ng-if="ruleItem.rule.matchOnceForVisitor" class="text-warning">
+          <i class="fa fa-fw fa-user"></i>
+          Rule can match only once <strong>for visitor</strong>
+        </div>
+        <h5>Target rooms:</h5>
+        <p class="text-success" ng-if="ruleItem.rule.targetAnyRoom">Any room</p>
+        <p ng-if="!ruleItem.rule.targetAnyRoom">
+          <code ng-repeat-start="roomUuid in ruleItem.rule.targetRooms" ng-bind="roomUuid"></code><span ng-repeat-end ng-if="!$last">, </span>
+          <em class="text-danger" ng-if="!ruleItem.rule.targetRooms.length">No rooms</em>
+        </p>
         <h5>
-          Action
-          <span class="label label-primary">{{ ruleController.getActionTypeLabel(ruleItem.rule.action.type) || "ACTION TYPE " + ruleItem.rule.action.type }}</span>
+          Action:
+          <strong class="text-primary" ng-bind="ruleController.getActionTypeLabel(ruleItem.rule.action.type) || 'ACTION TYPE ' + ruleItem.rule.action.type"></strong>
         </h5>
         <pre ng-show="ruleItem.rule.action.value">{{ ruleItem.rule.action.value }}</pre>
 
@@ -36,7 +55,9 @@
           <span class="fa fa-fw fa-check text-success" ng-show="ruleCondition.state == 'active'" ng-if-start="!ruleCondition.evented" tooltip="Condition matches!" tooltip-placement="right"></span>
           <span class="fa fa-fw fa-times text-danger" ng-show="ruleCondition.state === 'passive'" tooltip="Condition does not match" tooltip-placement="right"></span>
           <span class="fa fa-fw fa-question text-muted" ng-show="ruleCondition.state === 'pending'" ng-if-end tooltip="Condition is being checked&hellip;" tooltip-placement="right"></span>
-          <span class="label" ng-class="ruleCondition.evented ? 'label-info' : ruleCondition.state == 'active' ? 'label-success' : ruleCondition.state == 'passive' ? 'label-danger' : 'label-default'">{{ ruleController.getConditionTypeLabel(ruleCondition.condition.type) }}</span>
+          <strong ng-class="ruleCondition.evented ? 'text-info' : ruleCondition.state == 'active' ? 'text-success' : ruleCondition.state == 'passive' ? 'text-danger' : 'text-default'" ng-bind="ruleController.getConditionTypeLabel(ruleCondition.condition.type)"></strong>
+          <span ng-if="ruleCondition.condition.negate">does <strong>NOT</strong> match</span>
+          <span ng-if="!ruleCondition.condition.negate">matches</span>
           <code ng-bind="ruleCondition.condition.value" style="white-space: pre-line;" ng-if="!conditionController.isEditing"></code>
           <a href="javascript:void(0);" ng-click="conditionController.startEditing(ruleCondition.condition)" ng-if="ruleController.clientInfo.ruleEngine &amp;&amp; !conditionController.isEditing">
             <i class="fa fa-fw fa-pencil"></i>
@@ -55,8 +76,10 @@
           <span class="fa fa-fw fa-check text-success" ng-show="ruleCondition.state == 'active'" tooltip="Condition matches!" tooltip-placement="right"></span>
           <span class="fa fa-fw fa-times text-danger" ng-show="ruleCondition.state === 'passive'" tooltip="Condition does not match" tooltip-placement="right"></span>
           <span class="fa fa-fw fa-question text-muted" ng-show="ruleCondition.state === 'pending'" tooltip="Condition is being checked&hellip;" tooltip-placement="right"></span>
-          <a href="javascript:void(0);" ng-click="showConditionSource=true" ng-hide="showConditionSource">Show condition</a>
-          <a href="javascript:void(0);" ng-click="showConditionSource=false" ng-show="showConditionSource">Hide condition</a>
+          <a href="javascript:void(0);" ng-click="showConditionSource=!showConditionSource">
+            <i class="fa fa-fw" ng-class="showConditionSource ? 'fa-caret-down' : 'fa-caret-right'"></i>
+            {{ruleController.getConditionTitle(ruleCondition.condition)}}
+          </a>
           <pre class="small" ng-bind="ruleCondition.condition" ng-show="showConditionSource"></pre>
         </div>
         <h5 ng-if="ruleItem.actionConditions.length">Action Conditions</h5>
@@ -64,8 +87,10 @@
           <span class="fa fa-fw fa-check text-success" ng-show="ruleCondition.state == 'active'" tooltip="Condition matches!" tooltip-placement="right"></span>
           <span class="fa fa-fw fa-times text-danger" ng-show="ruleCondition.state === 'passive'" tooltip="Condition does not match" tooltip-placement="right"></span>
           <span class="fa fa-fw fa-question text-muted" ng-show="ruleCondition.state === 'pending'" tooltip="Condition is being checked&hellip;" tooltip-placement="right"></span>
-          <a href="javascript:void(0);" ng-click="showConditionSource=true" ng-hide="showConditionSource">Show condition</a>
-          <a href="javascript:void(0);" ng-click="showConditionSource=false" ng-show="showConditionSource">Hide condition</a>
+          <a href="javascript:void(0);" ng-click="showConditionSource=!showConditionSource">
+            <i class="fa fa-fw" ng-class="showConditionSource ? 'fa-caret-down' : 'fa-caret-right'"></i>
+            {{ruleController.getConditionTitle(ruleCondition.condition)}}
+          </a>
           <pre class="small" ng-bind="ruleCondition.condition" ng-show="showConditionSource"></pre>
         </div>
       </div>
