@@ -125,8 +125,7 @@
       });
       response.ruleactionTypes = this.inverseObject(giosg.rulesConfig.actionTypes);
       response.ruleconditionTypes = this.inverseObject(giosg.rulesConfig.conditionTypes);
-      response.rules = giosg.rulesConfig.getRules();
-      response.ruleEngine = !!giosg.ruleEngine;
+      response.rules = giosg.ruleEngine.getRules();
     }
     response.isCompatible = this.checkCompatibility();
     this.sendResponse(data.query, response);
