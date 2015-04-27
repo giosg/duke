@@ -1,8 +1,12 @@
+html, body {
+  height: 530px;
+  max-height: 530px;
+  overflow: auto;
+}
 body {
   width: 500px;
   min-height: 300px;
   padding: 10px;
-  height: 100%;
 }
 .nav, .pagination, .carousel, .panel-title a { cursor: pointer; }
 
