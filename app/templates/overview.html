@@ -20,7 +20,7 @@
     </a>
     <span class="pull-right" ng-class="{'text-success': clientInfo.rooms.length, 'text-danger': !clientInfo.rooms.length}"> {{ clientInfo.rooms.length || 0}} </span>
     <div ng-show="showRooms">
-      <code ng-repeat="room in clientInfo.rooms"> {{ room }}</code>
+      <code ng-repeat="room in clientInfo.rooms"> {{ room }}<br/></code>
     </div>
   </li>
 
