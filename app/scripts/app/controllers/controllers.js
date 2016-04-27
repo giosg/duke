@@ -3,7 +3,7 @@
 (function(angular, chrome) {
    angular.module('popup')
   .controller('OverViewController', ['$scope', 'clientInfo', 'ClientInfoService', function($scope, clientInfo, ClientInfoService) {
-      $scope.currentVersion = "0.2.3";
+      $scope.currentVersion = "0.2.4";
       $scope.clientInfo = clientInfo;
       $scope.showClient = function() {
         ClientInfoService.showClient();
