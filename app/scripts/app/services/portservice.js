@@ -26,6 +26,7 @@
     };
 
     PortService.prototype.onPortMessage = function(message) {
+      console.log(message)
       var self = this;
       if (message._type == "DUKERESPONSE") {
         $rootScope.$evalAsync(function() {

@@ -1,4 +1,4 @@
-<span class="text-muted pull-right">Duke-{{currentVersion}}</span>
+<span class="text-muted pull-right"><span class="version-text">Duke-{{currentVersion}}</span></span>
 <h3>Overview</h3>
 <ul class="list-group">
   <li class="list-group-item" ng-class="{'list-group-item-success': clientInfo.hasGiosg, 'list-group-item-danger': !clientInfo.hasGiosg}">
@@ -34,12 +34,16 @@
     <span class="pull-right" ng-class="{'text-success': clientInfo.enabledCartSelectors.length, 'text-danger': !clientInfo.enabledCartSelectors.length}"> {{ clientInfo.enabledCartSelectors.length || 0 }} </span>
   </li>
 </ul>
-<button class="btn btn-info btn-sm" ng-click="showButton()"><i class="fa fa-plus"></i> Show Chat button</button>
-<button class="btn btn-info btn-sm" ng-click="showClient()"><i class="fa fa-plus"></i> Show Chat window</button>
+<button class="btn btn-info btn-sm" ng-click="showButton()"><i class="fa fa-plus"></i>&nbsp;Show Chat Button</button>
+<button class="btn btn-success btn-sm" ng-click="showClient()"><i class="fa fa-eye"></i>&nbsp;Show Chat Window</button>
+<br/>
+<button class="btn btn-info btn-sm" ng-disabled="cobrowse" ng-click="enableCobrowse()"><i class="fa fa-plus"></i>&nbsp;Enable CoBrowse</button>
+<button class="btn btn-success btn-sm" ng-disabled="!cobrowse" ng-click="showCobrowse()"><i class="fa fa-eye"></i>&nbsp;Show CoBrowse</button>
 
-<h3>Technical info</h3>
-<strong>Company ID</strong>  <kbd ng-show="clientInfo.companyId">{{ clientInfo.companyId }}</kbd><br />
-<strong>Domain ID</strong>   <kbd ng-show="clientInfo.domainId">{{ clientInfo.domainId  }}</kbd><br />
-<strong>Company ID</strong>  <kbd ng-show="clientInfo.companyId">{{ clientInfo.companyId  }}</kbd><br />
-<strong>Visitor CID</strong> <kbd ng-show="clientInfo.visitorCid">{{ clientInfo.visitorCid  }}</kbd><br />
-<strong>Visitor GID</strong> <kbd ng-show="clientInfo.visitorGid">{{ clientInfo.visitorGid  }}</kbd>
+<div class="technical-info">
+  <strong>Company ID</strong>  <kbd ng-show="clientInfo.companyId">{{ clientInfo.companyId }}</kbd><br />
+  <strong>Domain ID</strong>   <kbd ng-show="clientInfo.domainId">{{ clientInfo.domainId  }}</kbd><br />
+  <strong>Company ID</strong>  <kbd ng-show="clientInfo.companyId">{{ clientInfo.companyId  }}</kbd><br />
+  <strong>Visitor CID</strong> <kbd ng-show="clientInfo.visitorCid">{{ clientInfo.visitorCid  }}</kbd><br />
+  <strong>Visitor GID</strong> <kbd ng-show="clientInfo.visitorGid">{{ clientInfo.visitorGid  }}</kbd>
+</div>
