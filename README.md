@@ -1,19 +1,28 @@
 Duke - A Chrome Extension project
 ================
-![Duke](http://i.imgur.com/ns7QoLz.jpg)
 
 Based on  [https://github.com/flrent/chrome-extension-angular-base](https://github.com/flrent/chrome-extension-angular-base)
 
-## Get Started
-- Clone this repo
+## Why "Duke"?
+Because https://www.youtube.com/watch?v=uUcEGOLfUTE
+
+## How to develop
+- Fork this repo and clone it
 - Run `npm install` and `bower install`
 - Go to `chrome://extensions/`
 - Activate developer mode
 - Click on  `load an unpacked extension` and locate your cloned repo, and select the `app` folder
+- You can now modify the extension code and then reload page to see your changes
+- Do some changes and submit a pull request
 
-## Build and deploy
-The build `manifest.json` file is `manifest-build.json`. It differs from the regular `manifest.json` to use only built files (single files for the all popup app, content scripts or background pages).
+## Publish new version of the extension
+Either follow the original documentation by Google: https://developer.chrome.com/extensions/packaging and do the building manually. See part "Uploading a previously packaged extension to the Chrome Web Store"
 
-To build the app and get a single scripts for each popup app, content script, or background page, simpy run :
+or you can use the `build-and-package.sh` to pack the exension
 
-`grunt build`
+- First get the private key for Duke. Save it to some file i.e. `/Users/myname/key.pem`
+- Bump version in manifest.json
+- Build `duke.zip` with `build-and-package.sh`
+   - Example usage `./build-and-package.sh --key=/Users/myname/key.pem`
+- The script should output `duke.zip` and you can upload that to Chrome Webstore
+- Commit version bump and push changes to master
