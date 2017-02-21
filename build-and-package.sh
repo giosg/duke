@@ -49,9 +49,9 @@ set -u
 }
 
 # Do the build
-echo "Building app.crx..."
+echo "Building duke.zip ..."
 
-# Create a temp dir, copy stuff there, build the extension and then clean the temp directory
+# Create a temp dir, copy stuff there and compress the extension
 echo "Copying files"
 build_dir=$(mktemp -d)
 cp -R app/. $build_dir
