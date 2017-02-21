@@ -40,7 +40,7 @@ a {
 }
 
 a:hover {
-  color: #9dfffa;
+  color: #fff;
   text-decoration: none;
   cursor: pointer;
 }
@@ -99,14 +99,14 @@ a.text-danger {
 }
 
 .nav-tabs>li.active>a, .nav-tabs>li.active>a:hover, .nav-tabs>li.active>a:focus {
-  color: #9dfffa;
+  color: #ffffff;
   background-color: #36363c;
   border-color: #333338;
 }
 
 .nav-tabs > li > a:hover {
   border-color: #333338;
-  color: #9dfffa;
+  color: #ffffff;
 }
 
 .nav > li > a:hover {
@@ -184,7 +184,7 @@ li.list-group-item-danger a.text-success, li.list-group-item-danger span.text-su
 }
 
 .list-group-item code {
-  color: #9dfffa;
+  color: #fff;
   background-color: #333338;
   padding: 3px;
   display: block;
@@ -217,12 +217,12 @@ li.list-group-item-danger a.text-success, li.list-group-item-danger span.text-su
   width: 90px;
   font-size: 12px;
   height: 15px;
-  line-height: 15px;
+  line-height: 22px;
   font-family: 'ralewaybold';
 }
 
 .technical-info strong:hover {
-  color: #9dfffa;
+  color: #fff;
 }
 
 .technical-info kbd {
