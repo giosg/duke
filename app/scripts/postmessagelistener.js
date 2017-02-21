@@ -31,9 +31,6 @@
       }
       document.body.appendChild(script);
     }
-    else {
-      self.sendMessage('cobrowseLoaded', false);
-    }
   }
 
   DukePostMessageClient.prototype.on_showCobrowse = function(data) {
@@ -203,7 +200,6 @@
   client.attachPostMessageListener();
 
   function onGiosgApiReady() {
-    console.log("gapi ready")
     // Giosg API is now ready!
     var giosg = window.giosg, ruleEngine = giosg && giosg.ruleEngine;
     if (ruleEngine) {
@@ -214,11 +210,6 @@
         client.sendMessage('ruleStateChange', ruleEngine._getRuleStates(null, true));
       });
     }
-    // if (typeof window.cobrowse === 'object') {
-    //   console.log("check ok")
-    //   client.sendMessage('cobrowseLoaded', true);
-    // }
-
   }
 
   // If the _giosg function is available then use it to attach listeners to the public giosg API
@@ -229,7 +220,5 @@
   setInterval(function() {
     client.sendMessage('cobrowseLoaded', typeof window.cobrowse == 'object');
   }, 1000);
-
-  window.duke = client;
 
 })(window, window._giosg);
