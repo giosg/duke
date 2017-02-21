@@ -21,9 +21,21 @@ body {
   position: absolute;
   left: 0; right: 0;
   top: 0; bottom: 0;
-  background: rgba(255,255,255,0.5);
+  background: rgba(22, 22, 22, 0.92);
   z-index: 10;
 }
+
+.load-mask img {
+  width: 200px;
+  height: 200px;
+  margin: auto;
+  bottom: 0;
+  top: -250px;
+  left: 0;
+  right: 0;
+  position: absolute;
+}
+
 .load-mask-inner {
   text-align: center;
   position: absolute;
@@ -43,6 +55,38 @@ a:hover {
   color: #fff;
   text-decoration: none;
   cursor: pointer;
+}
+
+.panel-body a:hover {
+  color: #aaa;
+}
+
+.panel-body a:visited, .panel-body a:focus {
+  text-decoration: none;
+}
+
+.panel-body .text-success {
+  color: #4cd482;
+}
+
+.panel-body .text-danger {
+  color: #fb008d;
+}
+
+.panel-body .text-warning {
+  color: #fb008d;
+}
+
+.panel-body a {
+  color: #222;
+}
+
+.panel-body strong.text-primary {
+  color: #4cd482;
+}
+
+.panel-body code {
+  color: #fb008d;
 }
 
 a.text-success {
@@ -92,8 +136,8 @@ a.text-danger {
   -webkit-user-select: none;
 }
 
-.nav>li>a:focus {
-  color: #9dfffa;
+.nav > li > a:focus {
+  color: #fff;
   background-color: #36363c;
   border-color: #333338;
 }
@@ -124,7 +168,7 @@ a.text-danger {
 }
 
 .label-danger {
-  background-color: #fd69f2;
+  background-color: #fd6999;
 }
 
 .panel {
