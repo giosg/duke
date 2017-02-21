@@ -7,7 +7,9 @@
     MATCHRULE:     'matchRule',
     RUNCART:       'runCart',
     SHOWCLIENT:    'showClient',
-    SHOWBUTTON:    'showButton'
+    SHOWBUTTON:    'showButton',
+    ENABLE_COBROWSE: 'enableCobrowse',
+    SHOW_COBROWSE: 'showCobrowse'
   };
 
   angular.module('popup.services')
@@ -81,6 +83,14 @@
       then(function(message) {
         return message.response.cart;
       });
+    };
+
+    ClientInfoService.prototype.enableCobrowse  = function() {
+      return PortService.sendAsyncMessage({ command : COMMANDS.ENABLE_COBROWSE });
+    };
+
+    ClientInfoService.prototype.showCobrowse  = function() {
+      return PortService.sendAsyncMessage({ command : COMMANDS.SHOW_COBROWSE });
     };
 
     ClientInfoService.prototype.showClient  = function() {

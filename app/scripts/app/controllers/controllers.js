@@ -2,15 +2,26 @@
 
 (function(angular, chrome) {
    angular.module('popup')
-  .controller('OverViewController', ['$scope', 'clientInfo', 'ClientInfoService', function($scope, clientInfo, ClientInfoService) {
+  .controller('OverViewController', ['$scope', 'clientInfo', 'ClientInfoService', 'PortService',
+    function($scope, clientInfo, ClientInfoService, PortService) {
       $scope.currentVersion = "0.2.4";
       $scope.clientInfo = clientInfo;
+      $scope.enableCobrowse = function() {
+        ClientInfoService.enableCobrowse();
+      };
+      $scope.showCobrowse = function() {
+        ClientInfoService.showCobrowse();
+      };
       $scope.showClient = function() {
         ClientInfoService.showClient();
       };
       $scope.showButton = function() {
         ClientInfoService.showButton();
       };
+      var unlistenCobrowse = PortService.onMessage('cobrowseLoaded', function(data) {
+        $scope.cobrowse = data;
+      });
+      $scope.$on('$destroy', unlistenCobrowse);
   }])
   .controller('RuleController', [
               'ruleStates', '$scope', 'ClientInfoService', 'PortService', '$state',

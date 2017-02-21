@@ -8,6 +8,37 @@
   function DukePostMessageClient() {
   }
 
+  DukePostMessageClient.prototype.on_enableCobrowse = function(data) {
+    var self = this;
+    if (typeof window.cobrowse === 'undefined') {
+      var script = document.createElement('script');
+      script.setAttribute('type', 'text/javascript');
+      script.setAttribute('src', 'https://api.giosgcobrowse.com/static/visitor/cobrowse.visitor2.js');
+      script.onload = function() {
+        window.cobrowse = new CoBrowseVisitor({
+          logLevel: 3,
+          ui: true,
+          passwords: false,
+          blacklist: [],
+          protected: [],
+          disabled: [],
+          disabledUrls: [],
+          hidden: [],
+          widgets: {launchButton: false}
+        });
+        window.cobrowse.init();
+        self.sendMessage('cobrowseLoaded', true);
+      }
+      document.body.appendChild(script);
+    }
+    else {
+      self.sendMessage('cobrowseLoaded', false);
+    }
+  }
+
+  DukePostMessageClient.prototype.on_showCobrowse = function(data) {
+    window.cobrowse.triggerEvent('CoBrowse::Show')
+  }
 
   DukePostMessageClient.prototype.on_runCart = function(data) {
     var lastCartData = giosg.api.shoppingCart._previous_data_string;
@@ -158,7 +189,7 @@
     window.postMessage({ _type: 'DUKERESPONSE', query: query, response: response }, '*');
   };
 
-  DukePostMessageClient.prototype.sendMessage = function(msgType /* , msgParams */) {
+  DukePostMessageClient.prototype.sendMessage = function(msgType /*, msgParams*/) {
     var msgArgs = Array.prototype.slice.call(arguments, 1);
     window.postMessage({ _type: 'DUKEMESSAGE', msgType: msgType, msgArgs: msgArgs }, '*');
   };
@@ -172,6 +203,7 @@
   client.attachPostMessageListener();
 
   function onGiosgApiReady() {
+    console.log("gapi ready")
     // Giosg API is now ready!
     var giosg = window.giosg, ruleEngine = giosg && giosg.ruleEngine;
     if (ruleEngine) {
@@ -182,11 +214,22 @@
         client.sendMessage('ruleStateChange', ruleEngine._getRuleStates(null, true));
       });
     }
+    // if (typeof window.cobrowse === 'object') {
+    //   console.log("check ok")
+    //   client.sendMessage('cobrowseLoaded', true);
+    // }
+
   }
 
   // If the _giosg function is available then use it to attach listeners to the public giosg API
   if (typeof _giosg === 'function') {
     _giosg(onGiosgApiReady);
   }
+
+  setInterval(function() {
+    client.sendMessage('cobrowseLoaded', typeof window.cobrowse == 'object');
+  }, 1000);
+
+  window.duke = client;
 
 })(window, window._giosg);
