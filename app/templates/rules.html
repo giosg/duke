@@ -43,8 +43,10 @@
           <em class="text-danger" ng-if="!ruleItem.rule.targetRooms.length">No rooms</em>
         </p>
         <h5>
-          Action:
-          <strong class="text-primary" ng-bind="ruleController.getActionTypeLabel(ruleItem.rule.action.type) || 'ACTION TYPE ' + ruleItem.rule.action.type"></strong>
+          Actions:
+          <strong ng-repeat="action in ruleItem.rule.actions" class="text-primary">
+            <span ng-bind="ruleController.getActionTypeLabel(action.type) || 'ACTION TYPE ' + action.type"></span><span ng-if="!$last">, </span>
+          </strong>
         </h5>
         <pre ng-show="ruleItem.rule.action.value">{{ ruleItem.rule.action.value }}</pre>
 
