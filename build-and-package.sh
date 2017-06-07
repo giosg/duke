@@ -48,6 +48,10 @@ set -u
   exit 1
 }
 
+# Ensure that bower_components are installed
+echo "Installing bower components ..."
+bower install
+
 # Do the build
 echo "Building duke.zip ..."
 
@@ -62,5 +66,5 @@ cd $build_dir
 zip -r duke.zip .
 cd -
 cp $build_dir/duke.zip .
-echo "Done."
+echo "Done building duke.zip"
 echo "Go to Chrome webstore and upload duke.zip"
