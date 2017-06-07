@@ -4,7 +4,7 @@
    angular.module('popup')
   .controller('OverViewController', ['$scope', 'clientInfo', 'ClientInfoService', 'PortService',
     function($scope, clientInfo, ClientInfoService, PortService) {
-      $scope.currentVersion = "0.3.1";
+      $scope.currentVersion = "0.3.2";
       $scope.clientInfo = clientInfo;
       $scope.enableCobrowse = function() {
         ClientInfoService.enableCobrowse();
