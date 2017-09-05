@@ -9,13 +9,11 @@
   }
 
   DukePostMessageClient.prototype.on_enableCobrowse = function(data) {
-    var self = this;
-    if (typeof window.cobrowse === 'undefined') {
-      var script = document.createElement('script');
-      script.setAttribute('type', 'text/javascript');
-      script.setAttribute('src', 'https://api.giosgcobrowse.com/static/visitor/cobrowse.visitor2.js');
-      script.onload = function() {
-        window.cobrowse = new CoBrowseVisitor({
+    var self = this
+    var cobrowse_iframe = document.querySelector('iframe.__gcbsess_frame')
+    if (!cobrowse_iframe) {
+      (function() {
+        window.__giosg_cbconfig = {
           logLevel: 3,
           ui: true,
           passwords: false,
@@ -25,17 +23,21 @@
           disabledUrls: [],
           hidden: [],
           widgets: {launchButton: false}
-        });
-        window.cobrowse.init();
+        };
+        var script = document.createElement('script');
+
+        script.src = 'https://api.giosgcobrowse.com/static/visitor/cobrowse.loader2.js';
+        document.body.appendChild(script);
         self.sendMessage('cobrowseLoaded', true);
-      }
-      document.body.appendChild(script);
+      })();
     }
-  }
+  };
 
   DukePostMessageClient.prototype.on_showCobrowse = function(data) {
-    window.cobrowse.triggerEvent('CoBrowse::Show')
-  }
+    var customEvent = document.createEvent("Event");
+    customEvent.initEvent("CoBrowse::VisitorShow", true, false);
+    document.dispatchEvent(customEvent);
+  };
 
   DukePostMessageClient.prototype.on_runCart = function(data) {
     var lastCartData = giosg.api.shoppingCart._previous_data_string;
@@ -218,7 +220,11 @@
   }
 
   setInterval(function() {
-    client.sendMessage('cobrowseLoaded', typeof window.cobrowse == 'object');
+    var loaded = false;
+    if (document.querySelector("iframe.__gcbsess_frame")) {
+      loaded = true;
+    }
+    client.sendMessage('cobrowseLoaded', loaded);
   }, 1000);
 
 })(window, window._giosg);
