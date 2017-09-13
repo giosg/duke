@@ -21,7 +21,7 @@ Either follow the original documentation by Google: https://developer.chrome.com
 or you can use the `build-and-package.sh` to pack the exension
 
 - First get the private key for Duke. Save it to some file i.e. `/Users/myname/key.pem`
-- Bump version in manifest.json
+- Bump version like in this commit https://github.com/giosg/duke/commit/0cc73a9f333a57b52ced95900a43c8cefb63af25
 - Build `duke.zip` with `build-and-package.sh`
    - Example usage `./build-and-package.sh --key=/Users/myname/key.pem`
 - The script should output `duke.zip` and you can upload that to Chrome Webstore
