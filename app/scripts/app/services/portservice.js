@@ -26,12 +26,10 @@
     };
 
     PortService.prototype.onPortMessage = function(message) {
-      console.log(message)
       var self = this;
       if (message._type == "DUKERESPONSE") {
         $rootScope.$evalAsync(function() {
           if(self.queries[message.query]) {
-            $log.log("[Duke.PortService] Got response to query", message.query, "with message", message);
             self.queries[message.query].resolve(message);
             delete self.queries[message.query];
           }
@@ -42,7 +40,6 @@
         var msgArgs = message.msgArgs || [];
         if (msgType) {
           $rootScope.$evalAsync(function() {
-            $log.log("[Duke.PortService] Got port message", msgType, "with arguments", msgArgs);
             $rootScope.$emit('portMessage:' + msgType, msgArgs);
           });
         }
