@@ -9,7 +9,7 @@
   </small>
 </h3>
 <div class="panel-group">
-  <div ng-repeat="ruleItem in ruleController.ruleStates track by ruleItem.rule.id || $id(ruleItem)" ng-init="expanded=false" class="panel" ng-class="ruleController.getRulePanelClass(ruleItem)">
+  <div ng-repeat="ruleItem in ruleController.ruleStates track by $index" ng-init="expanded=false" class="panel" ng-class="ruleController.getRulePanelClass(ruleItem)">
     <div class="panel-heading">
       <i class="fa fa-fw" ng-class="expanded ? 'fa-caret-down' : 'fa-caret-right'"></i>
       <span class="label" ng-class="ruleController.getRuleLabelClass(ruleItem)" ng-if="ruleItem.rule.autoCreated" title="This rule was automatically created">Auto</span>
