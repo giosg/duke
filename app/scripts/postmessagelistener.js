@@ -94,7 +94,6 @@
     var conditionIndex = data.request.conditionIndex;
     var newValue = data.request.value;
     var newType = data.request.type;
-    console.log("Change " + (conditionIndex + 1) + "nth on rule #" + ruleId + " to type " + newType + " and value " + newValue);
     if (ruleEngine && ruleId != null && conditionIndex != null) {
       var rules = ruleEngine.getRules();
       for (var i = 0; i < rules.length; i++) {
@@ -104,11 +103,9 @@
           if (condition) {
             if (newValue !== undefined && condition.value != newValue) {
               condition.value = newValue;
-              console.log("Changed the condition value to ", newValue);
             }
             if (newType !== undefined && condition.type != newType) {
               condition.type = newType;
-              console.log("Changed the condition type to ", newType);
             }
           }
         }
