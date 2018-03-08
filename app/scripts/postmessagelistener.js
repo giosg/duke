@@ -162,8 +162,13 @@
   };
 
   DukePostMessageClient.prototype.on_showClient = function(data) {
-    GiosgClient.createChatDialog();
-    GiosgClient.showClient();
+    if (GiosgClient.isOperatorOnline === true) {
+        GiosgClient.showClient();
+        GiosgClient.createChatDialog();
+    } else {
+      var room = giosg.rooms[0];
+      GiosgClient.showClient(false, room);
+    }
     this.sendResponse(data.query, {});
   };
 
