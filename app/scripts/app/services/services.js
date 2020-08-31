@@ -1,1 +1,1 @@
-angular.module('popup.services', ['popup']);
+angular.module("popup.services", ["popup"]);

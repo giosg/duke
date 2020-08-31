@@ -1,6 +1,6 @@
 {
-  "name": "duke",
-  "version": "0.3.3",
+  "name": "duke2",
+  "version": "1.0.0",
   "dependencies": {
     "angular": "~1.2.16",
     "underscore": "~1.6.0",

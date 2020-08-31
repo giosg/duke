@@ -48,12 +48,16 @@ set -u
   exit 1
 }
 
+# Ensure that npm packages are installed
+echo "Installing packages ..."
+npm install
+
 # Ensure that bower_components are installed
 echo "Installing bower components ..."
-bower install
+node_modules/.bin/bower install
 
 # Do the build
-echo "Building duke.zip ..."
+echo "Building duke2.zip ..."
 
 # Create a temp dir, copy stuff there and compress the extension
 echo "Copying files"
@@ -61,10 +65,10 @@ build_dir=$(mktemp -d)
 cp -R app/. $build_dir
 cp $keyfile $build_dir/key.pem
 
-echo "Compressing extension and $keyfile into duke.zip"
+echo "Compressing extension and $keyfile into duke2.zip"
 cd $build_dir
-zip -r duke.zip .
+zip -r duke2.zip .
 cd -
-cp $build_dir/duke.zip .
-echo "Done building duke.zip"
-echo "Go to Chrome webstore and upload duke.zip"
+cp $build_dir/duke2.zip .
+echo "Done building duke2.zip"
+echo "Go to Chrome webstore and upload duke2.zip"

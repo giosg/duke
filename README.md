@@ -22,7 +22,7 @@ or you can use the `build-and-package.sh` to pack the exension
 
 - First get the private key for Duke. Save it to some file i.e. `/Users/myname/key.pem`
 - Bump version in manifest.json
-- Build `duke.zip` with `build-and-package.sh`
+- Build `duke2.zip` with `build-and-package.sh`
    - Example usage `./build-and-package.sh --key=/Users/myname/key.pem`
-- The script should output `duke.zip` and you can upload that to Chrome Webstore
+- The script should output `duke2.zip` and you can upload that to Chrome Webstore
 - Commit version bump and push changes to master
