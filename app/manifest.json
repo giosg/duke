@@ -21,10 +21,7 @@
         ]
     },
     "permissions": [
-        "http://*/*",
-        "https://*/*",
-        "tabs",
-        "<all_urls>"
+        "activeTab"
     ],
     "content_security_policy": "script-src 'self' https://ssl.google-analytics.com; object-src 'self'",
     "web_accessible_resources": [
