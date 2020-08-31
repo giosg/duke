@@ -49,40 +49,8 @@
     var self = this;
     var giosg = window.giosg, ruleEngine = giosg && giosg.ruleEngine, jGiosg = window.jGiosg;
     if (ruleEngine) {
-      // Use the new Rule Engine
       var ruleStates = ruleEngine._getRuleStates(null, true);
       self.sendResponse(data.query, { ruleStates: ruleStates });
-    } else if (giosg && giosg.rulesConfig && jGiosg && GiosgClient.ruleMatches) {
-      // Convert the legacy rules to the correct format
-      var rules = giosg.rulesConfig.getRules();
-      var rulePromises = [];
-      for (var i = 0; i < rules.length; i++) {
-        var rule = rules[i];
-        rulePromises.push(GiosgClient.ruleMatches(rule));
-      }
-      jGiosg.when.apply(jGiosg, rulePromises).then(function(/* matchingRules... */) {
-        var ruleStates = [];
-        var matchingRules = arguments;
-        for (var i = 0; i < matchingRules.length; i++) {
-          var ruleMatches = !!matchingRules[i];
-          var rule = rules[i];
-          var ruleConditions = [];
-          for (var j = 0; j < rule.conditions.length; j++) {
-            var condition = rule.conditions[j];
-            ruleConditions.push({
-              condition: condition
-            });
-          }
-          ruleStates.push({
-            rule: rule,
-            state: ruleMatches ? 'active' : 'passive',
-            ruleConditions: ruleConditions,
-            commonConditions: [],  // Does not exists in the old system
-            actionConditions: []  // Does not exists in the old system
-          });
-        }
-        self.sendResponse(data.query, { ruleStates: ruleStates });
-      });
     } else {
       self.sendResponse(data.query, { ruleStates: [] });
     }
