@@ -173,7 +173,7 @@
       const original = ruleEngine.refreshAllRules;
       ruleEngine.refreshAllRules = (...args) => {
         return original.apply(ruleEngine, args).then(() => {
-            client.sendMessage('ruleStateChange', ruleEngine._getRuleStates(null, true));
+          client.sendMessage('ruleStateChange', ruleEngine._getRuleStates(null, true));
         });
       };
     }
