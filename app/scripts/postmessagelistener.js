@@ -170,12 +170,12 @@
     // Giosg API is now ready!
     var giosg = window.giosg, ruleEngine = giosg && giosg.ruleEngine;
     if (ruleEngine) {
-      ruleEngine.onRefreshStart(function() {
-        client.sendMessage('ruleStateChange', ruleEngine._getRuleStates(null, true));
-      });
-      ruleEngine.onRefreshEnd(function() {
-        client.sendMessage('ruleStateChange', ruleEngine._getRuleStates(null, true));
-      });
+      const original = ruleEngine.refreshAllRules;
+      ruleEngine.refreshAllRules = (...args) => {
+        return original.apply(ruleEngine, args).then(() => {
+            client.sendMessage('ruleStateChange', ruleEngine._getRuleStates(null, true));
+        });
+      };
     }
   }
 
