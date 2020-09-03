@@ -9,7 +9,7 @@
       "ClientInfoService",
       "PortService",
       function ($scope, clientInfo, ClientInfoService, PortService) {
-        $scope.currentVersion = "1.0.1";
+        $scope.currentVersion = "1.0.2";
         $scope.clientInfo = clientInfo;
         $scope.enableCobrowse = function () {
           ClientInfoService.enableCobrowse();
