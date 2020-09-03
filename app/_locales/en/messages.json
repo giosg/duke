@@ -4,7 +4,7 @@
     "description": "Duke2 - Unofficial tool for debugging Giosg script and rules"
   },
   "appDescription": {
-    "message": "Unofficial tool for debugging Giosg script and rules",
+    "message": "Duke2 is unofficial tool for debugging Giosg script and rules.",
     "description": "Unofficial helper tool for Giosg Visitor debugging. With Duke you can check and validate that your Giosg configuration has been done properly. Currently supports Rules and Shopping Cart."
   }
 }
