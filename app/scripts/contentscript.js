@@ -5,7 +5,7 @@
   DukeMessageProxy.prototype.injectPostMessageListener = function () {
     var s = document.createElement("script");
     // TODO: add "scripts/postmessagelistener.js" to web_accessible_resources in manifest.json
-    s.src = chrome.extension.getURL("scripts/postmessagelistener.js");
+    s.src = chrome.runtime.getURL("scripts/postmessagelistener.js");
     s.onload = function () {
       this.parentNode.removeChild(this);
     };

@@ -1,10 +1,22 @@
 {
   "name": "duke2",
   "version": "1.0.2",
-  "devDependencies": {},
-  "engines": {},
-  "scripts": {},
+  "type": "module",
+  "scripts": {
+    "dev": "vite build --mode development --watch",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "vite": "^5.0.0",
+    "@vitejs/plugin-legacy": "^5.0.0"
+  },
   "dependencies": {
-    "bower": "^1.8.8"
+    "angular": "^1.8.3",
+    "angular-ui-router": "^1.0.30",
+    "angular-ui-bootstrap": "^2.5.6",
+    "bootstrap": "^3.4.1",
+    "jquery": "^3.7.1",
+    "underscore": "^1.13.6"
   }
 }

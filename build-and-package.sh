@@ -52,17 +52,17 @@ set -u
 echo "Installing packages ..."
 npm install
 
-# Ensure that bower_components are installed
-echo "Installing bower components ..."
-node_modules/.bin/bower install
+# Build with Vite
+echo "Building extension with Vite ..."
+npm run build
 
-# Do the build
+# Do the packaging
 echo "Building duke2.zip ..."
 
-# Create a temp dir, copy stuff there and compress the extension
+# Create a temp dir, copy built files there and compress the extension
 echo "Copying files"
 build_dir=$(mktemp -d)
-cp -R app/. $build_dir
+cp -R dist/. $build_dir
 cp $keyfile $build_dir/key.pem
 
 echo "Compressing extension and $keyfile into duke2.zip"
