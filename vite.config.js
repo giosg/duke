@@ -3,6 +3,7 @@ import { resolve } from 'path';
 import { fileURLToPath, URL } from 'node:url';
 import { copyFileSync, mkdirSync, existsSync, readdirSync, statSync } from 'fs';
 import { join, dirname } from 'path';
+import react from '@vitejs/plugin-react';
 
 // Plugin to copy static files
 const copyStaticFiles = () => {
@@ -31,7 +32,6 @@ const copyStaticFiles = () => {
       // Copy static files
       copyRecursively('app/manifest.json', 'dist/manifest.json');
       copyRecursively('app/images', 'dist/images');
-      copyRecursively('app/templates', 'dist/templates');
       copyRecursively('app/_locales', 'dist/_locales');
       copyRecursively('app/fonts', 'dist/fonts');
       copyRecursively('app/popup.html', 'dist/popup.html');
@@ -45,7 +45,7 @@ export default defineConfig({
     emptyOutDir: true,
     rollupOptions: {
       input: {
-        main: resolve(__dirname, 'app/scripts/main.js'),
+        main: resolve(__dirname, 'app/scripts/main.jsx'),
         background: resolve(__dirname, 'app/scripts/background.js'),
         contentScript: resolve(__dirname, 'app/scripts/contentscript.js'),
         postMessageListener: resolve(__dirname, 'app/scripts/postmessagelistener.js'),
@@ -78,7 +78,7 @@ export default defineConfig({
       }
     },
   },
-  plugins: [copyStaticFiles()],
+  plugins: [react(), copyStaticFiles()],
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./app', import.meta.url)),
