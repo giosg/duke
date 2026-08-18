@@ -2,15 +2,17 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useClientInfoService } from '../hooks/useClientInfoService';
 
-const Cart = () => {
+const Cart = ({ portService }) => {
   const navigate = useNavigate();
-  const { runCart } = useClientInfoService();
+  const { runCart } = useClientInfoService(portService.sendAsyncMessage);
   const [cart, setCart] = useState({});
 
   useEffect(() => {
-    // Load cart data on component mount
-    runCart().then(setCart).catch(console.error);
-  }, [runCart]);
+    // Load cart data when port is connected
+    if (portService.isConnected) {
+      runCart().then(setCart).catch(console.error);
+    }
+  }, [portService.isConnected, runCart]);
 
   const reload = () => {
     navigate('/cart', { replace: true });

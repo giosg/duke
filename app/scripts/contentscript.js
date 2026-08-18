@@ -1,5 +1,6 @@
 (function (window, document, chrome) {
   "use strict";
+  
   function DukeMessageProxy() {}
 
   DukeMessageProxy.prototype.injectPostMessageListener = function () {
@@ -17,7 +18,9 @@
     if (event.source != window) return;
     var type = event.data && event.data._type;
     if (type == "DUKERESPONSE" || type == "DUKEMESSAGE") {
-      this.port.postMessage(event.data);
+      if (this.port) {
+        this.port.postMessage(event.data);
+      }
     }
   };
 
@@ -28,16 +31,25 @@
 
   DukeMessageProxy.prototype.attachProxyListeners = function () {
     var self = this;
+    self.isReady = true; // Mark as ready when listeners are attached
 
+    // Listen for port connections from popup
     chrome.runtime.onConnect.addListener(function (port) {
       self.port = port;
 
-      function onPortMessage() {
-        self.onPortMessage.apply(self, arguments);
+      // Send ready signal immediately upon connection
+      setTimeout(function() {
+        if (self.port) {
+          self.port.postMessage({ _type: 'DUKE_CONTENT_READY' });
+        }
+      }, 10);
+
+      function onPortMessage(message) {
+        self.onPortMessage(message);
       }
 
-      function onPostMessage() {
-        self.onPostMessage.apply(self, arguments);
+      function onPostMessage(event) {
+        self.onPostMessage(event);
       }
 
       port.onMessage.addListener(onPortMessage);
@@ -46,6 +58,7 @@
       port.onDisconnect.addListener(function () {
         port.onMessage.removeListener(onPortMessage);
         window.removeEventListener("message", onPostMessage);
+        self.port = null;
       });
     });
   };

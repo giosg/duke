@@ -3,12 +3,12 @@
 
 // Basic service worker setup
 chrome.runtime.onInstalled.addListener(() => {
-  console.log('Duke extension installed');
+  // Duke extension installed
 });
 
 // Handle extension startup
 chrome.runtime.onStartup.addListener(() => {
-  console.log('Duke extension started');
+  // Duke extension started
 });
 
 // Keep service worker alive if needed (optional, only if you have long-running tasks)

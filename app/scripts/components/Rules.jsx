@@ -1,16 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useClientInfoService } from '../hooks/useClientInfoService';
-import { usePortService } from '../hooks/usePortService';
+import { usePersistentState } from '../hooks/usePersistentState';
 import _ from 'lodash';
 
-const RuleConditionController = ({ ruleCondition, ruleId, conditionIndex, clientInfo, onRuleStatesUpdate }) => {
+const RuleConditionController = ({ ruleCondition, ruleId, conditionIndex, clientInfo, onRuleStatesUpdate, portService }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editedCondition, setEditedCondition] = useState({
     value: '',
     type: ''
   });
-  const { editRuleCondition } = useClientInfoService();
+  const { editRuleCondition } = useClientInfoService(portService.sendAsyncMessage);
 
   const startEditing = (condition) => {
     setIsEditing(true);
@@ -73,23 +73,69 @@ const RuleConditionController = ({ ruleCondition, ruleId, conditionIndex, client
   );
 };
 
-const Rules = () => {
+const Rules = ({ portService }) => {
   const navigate = useNavigate();
-  const { clientInfo, getRuleStates } = useClientInfoService();
-  const { onMessage } = usePortService();
+  const { clientInfo, getBasicInfo, getRuleStates } = useClientInfoService(portService.sendAsyncMessage);
+  const { isConnected, onMessage } = portService;
   const [ruleStates, setRuleStates] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [searchTerm, setSearchTerm, isSearchLoaded] = usePersistentState('rulesSearchTerm', '');
+  const [expandedRules, setExpandedRules, isExpandedLoaded] = usePersistentState('expandedRules', {});
+
+  // Effects for persistent state restoration
+
+  // Function to toggle rule expansion
+  const toggleRuleExpansion = useCallback((ruleId) => {
+    setExpandedRules(prevExpanded => {
+      const newExpanded = {
+        ...prevExpanded,
+        [ruleId]: !prevExpanded[ruleId]
+      };
+      return newExpanded;
+    });
+  }, [setExpandedRules]);
 
   useEffect(() => {
-    // Load rule states on component mount
-    getRuleStates().then(setRuleStates).catch(console.error);
+    const loadRulesData = async () => {
+      // Only load data if port is connected
+      if (!portService.isConnected) {
+        return;
+      }
+
+      setLoading(true);
+      try {
+        // Ensure we have basic client info first
+        if (!clientInfo.hasGiosg) {
+          await getBasicInfo();
+        }
+
+        const data = await getRuleStates();
+        setRuleStates(data || []);
+      } catch (error) {
+        console.error('Failed to load rules:', error);
+        // Retry after a delay if it's not a permanent error
+        if (error.message !== 'Content script not ready') {
+          setTimeout(() => {
+            loadRulesData();
+          }, 2000);
+        }
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    // Load data if port is connected
+    loadRulesData();
 
     // Listen for rule state changes
     const unlistenRules = onMessage('ruleStateChange', (newRuleStates) => {
-      setRuleStates(newRuleStates);
+      setRuleStates(newRuleStates || []);
     });
 
-    return unlistenRules;
-  }, [getRuleStates, onMessage]);
+    return () => {
+      unlistenRules();
+    };
+  }, [portService.isConnected, clientInfo.hasGiosg, getBasicInfo, getRuleStates, onMessage]);
 
   const getActionTypeLabel = (actionType) => {
     const label = clientInfo.ruleactionTypes?.[actionType];
@@ -127,9 +173,17 @@ const Rules = () => {
     return "danger";
   };
 
-  const reload = () => {
+  const reload = async () => {
     navigate('/rules', { replace: true });
-    getRuleStates().then(setRuleStates).catch(console.error);
+    setLoading(true);
+    try {
+      const data = await getRuleStates();
+      setRuleStates(data || []);
+    } catch (error) {
+      console.error('Failed to reload rules:', error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const getConditionTitle = (condition) => {
@@ -141,64 +195,202 @@ const Rules = () => {
     return match ? match[1] : "[Custom condition]";
   };
 
-  const activeRules = ruleStates.filter(rule => rule.state === 'active');
+  // Filter and sort rules into two sections: matching first, then others
+  const filterAndSortRules = (rules) => {
+    return rules
+      .filter(rule => {
+        if (!searchTerm) return true;
+        const searchLower = searchTerm.toLowerCase();
+        const ruleName = (rule.rule.name || '').toLowerCase();
+        const ruleId = (rule.rule.id || '').toString().toLowerCase();
+        return ruleName.includes(searchLower) || ruleId.includes(searchLower);
+      })
+      .sort((a, b) => {
+        const nameA = (a.rule.name || '(Unnamed rule)').toLowerCase();
+        const nameB = (b.rule.name || '(Unnamed rule)').toLowerCase();
+        return nameA.localeCompare(nameB);
+      });
+  };
+
+  const filteredAndSortedRules = filterAndSortRules(ruleStates);
+
+  // Separate into matching (active) and non-matching sections
+  const matchingRules = filteredAndSortedRules.filter(rule => rule.state === 'active');
+  const nonMatchingRules = filteredAndSortedRules.filter(rule => rule.state !== 'active');
 
   return (
     <div>
-      <a href="javascript:void(0);" className="pull-right" onClick={reload}>
-        <i className="fa fa-fw fa-refresh"></i>
-        Reload
+      <a href="javascript:void(0);" className="pull-right" onClick={reload} disabled={loading}>
+        <i className={`fa fa-fw ${loading ? 'fa-spin fa-spinner' : 'fa-refresh'}`}></i>
+        {loading ? 'Loading...' : 'Reload'}
       </a>
       <h3>
         Rules
         <small>
-          {activeRules.length}/{ruleStates.length}
+          {matchingRules.length} matching, {nonMatchingRules.length} others
+          {searchTerm && ` (filtered from ${ruleStates.length} total)`}
         </small>
       </h3>
-      
-      <div className="panel-group">
-        {ruleStates.map((ruleItem, index) => (
-          <RulePanel
-            key={index}
-            ruleItem={ruleItem}
-            index={index}
-            getActionTypeLabel={getActionTypeLabel}
-            getConditionTypeLabel={getConditionTypeLabel}
-            getRulePanelClass={getRulePanelClass}
-            getRuleLabelClass={getRuleLabelClass}
-            getConditionTitle={getConditionTitle}
-            clientInfo={clientInfo}
-            onRuleStatesUpdate={setRuleStates}
+
+      {/* Search input */}
+      <div className="form-group" style={{ marginBottom: '15px', width: '100%', maxWidth: '100%', boxSizing: 'border-box', padding: '0 15px' }}>
+        <div className="input-group" style={{ display: 'flex', width: '100%', maxWidth: '100%', boxSizing: 'border-box' }}>
+          <span className="input-group-addon" style={{ flex: '0 0 auto', padding: '6px 12px', backgroundColor: '#eee', border: '1px solid #ccc', borderRight: 'none', borderRadius: '4px 0 0 4px', boxSizing: 'border-box', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <i className="fa fa-search"></i>
+          </span>
+          <input
+            type="text"
+            className="form-control"
+            placeholder="Search rules by name or ID..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            style={{
+              flex: '1 1 auto',
+              borderRadius: '0',
+              borderLeft: 'none',
+              borderRight: searchTerm ? 'none' : '1px solid #ccc',
+              boxSizing: 'border-box',
+              minWidth: 0,
+              maxWidth: searchTerm ? 'calc(100% - 72px)' : 'calc(100% - 40px)'
+            }}
           />
-        ))}
+          {searchTerm && (
+            <span className="input-group-btn" style={{ flex: '0 0 auto', marginLeft: 0 }}>
+              <button
+                className="btn btn-default"
+                type="button"
+                onClick={() => setSearchTerm('')}
+                title="Clear search"
+                style={{
+                  borderRadius: '0 4px 4px 0',
+                  borderLeft: 'none',
+                  margin: 0,
+                  height: '34px',
+                  padding: '6px 8px',
+                  boxSizing: 'border-box',
+                  flex: '0 0 auto',
+                  minWidth: '32px',
+                  width: '32px'
+                }}
+              >
+                <i className="fa fa-times"></i>
+              </button>
+            </span>
+          )}
+        </div>
       </div>
+      
+      {loading && ruleStates.length === 0 && (
+        <div className="text-center" style={{ padding: '20px' }}>
+          <i className="fa fa-spinner fa-spin fa-2x"></i>
+          <p>Loading rules...</p>
+        </div>
+      )}
+      
+      {!loading && ruleStates.length === 0 && (
+        <div className="text-center text-muted" style={{ padding: '20px' }}>
+          <i className="fa fa-exclamation-triangle fa-2x"></i>
+          <p>No rules found or failed to load rules.</p>
+          <p>Make sure you're on a page with Giosg chat enabled.</p>
+        </div>
+      )}
+
+      {!loading && ruleStates.length > 0 && filteredAndSortedRules.length === 0 && (
+        <div className="text-center text-muted" style={{ padding: '20px' }}>
+          <i className="fa fa-search fa-2x"></i>
+          <p>No rules match your search term "{searchTerm}".</p>
+          <button
+            className="btn btn-default btn-sm"
+            onClick={() => setSearchTerm('')}
+          >
+            Clear search
+          </button>
+        </div>
+      )}
+
+      {/* Matching Rules Section */}
+      {matchingRules.length > 0 && (
+        <div>
+          <h4 style={{ marginTop: '20px', color: '#28a745' }}>
+            <i className="fa fa-check"></i> Matching Rules ({matchingRules.length})
+          </h4>
+          <div className="panel-group">
+            {matchingRules.map((ruleItem, index) => (
+              <RulePanel
+                key={ruleItem.rule.id || `matching-${index}`}
+                ruleItem={ruleItem}
+                index={index}
+                getActionTypeLabel={getActionTypeLabel}
+                getConditionTypeLabel={getConditionTypeLabel}
+                getRulePanelClass={getRulePanelClass}
+                getRuleLabelClass={getRuleLabelClass}
+                getConditionTitle={getConditionTitle}
+                clientInfo={clientInfo}
+                onRuleStatesUpdate={setRuleStates}
+                portService={portService}
+                isExpanded={expandedRules[ruleItem.rule.id] || false}
+                onToggleExpansion={() => toggleRuleExpansion(ruleItem.rule.id)}
+              />
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Non-Matching Rules Section */}
+      {nonMatchingRules.length > 0 && (
+        <div>
+          <h4 style={{ marginTop: '20px', color: '#6c757d' }}>
+            <i className="fa fa-list"></i> Other Rules ({nonMatchingRules.length})
+          </h4>
+          <div className="panel-group">
+            {nonMatchingRules.map((ruleItem, index) => (
+              <RulePanel
+                key={ruleItem.rule.id || `nonmatching-${index}`}
+                ruleItem={ruleItem}
+                index={index}
+                getActionTypeLabel={getActionTypeLabel}
+                getConditionTypeLabel={getConditionTypeLabel}
+                getRulePanelClass={getRulePanelClass}
+                getRuleLabelClass={getRuleLabelClass}
+                getConditionTitle={getConditionTitle}
+                clientInfo={clientInfo}
+                onRuleStatesUpdate={setRuleStates}
+                portService={portService}
+                isExpanded={expandedRules[ruleItem.rule.id] || false}
+                onToggleExpansion={() => toggleRuleExpansion(ruleItem.rule.id)}
+              />
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 };
 
-const RulePanel = ({ 
-  ruleItem, 
-  index, 
-  getActionTypeLabel, 
-  getConditionTypeLabel, 
-  getRulePanelClass, 
+const RulePanel = ({
+  ruleItem,
+  index,
+  getActionTypeLabel,
+  getConditionTypeLabel,
+  getRulePanelClass,
   getRuleLabelClass,
   getConditionTitle,
   clientInfo,
-  onRuleStatesUpdate
+  onRuleStatesUpdate,
+  portService,
+  isExpanded,
+  onToggleExpansion
 }) => {
-  const [expanded, setExpanded] = useState(false);
-
   return (
     <div className={`panel ${getRulePanelClass(ruleItem)}`}>
       <div className="panel-heading">
-        <i className={`fa fa-fw ${expanded ? 'fa-caret-down' : 'fa-caret-right'}`}></i>
+        <i className={`fa fa-fw ${isExpanded ? 'fa-caret-down' : 'fa-caret-right'}`}></i>
         {ruleItem.rule.autoCreated && (
           <span className={`label ${getRuleLabelClass(ruleItem)}`} title="This rule was automatically created">
             Auto
           </span>
         )}
-        <a href="javascript:void(0);" onClick={() => setExpanded(!expanded)}>
+        <a href="javascript:void(0);" onClick={onToggleExpansion}>
           {ruleItem.rule.name || <em>(Unnamed rule)</em>}
         </a>
         {ruleItem.evented && (
@@ -219,7 +411,7 @@ const RulePanel = ({
         )}
       </div>
       
-      {expanded && (
+      {isExpanded && (
         <div className="panel-collapse collapse in">
           <div className="panel-body">
             {ruleItem.rule.matchOnceOnPage && (
@@ -286,6 +478,7 @@ const RulePanel = ({
                     getConditionTypeLabel={getConditionTypeLabel}
                     clientInfo={clientInfo}
                     onRuleStatesUpdate={onRuleStatesUpdate}
+                    portService={portService}
                   />
                 ))}
               </>
@@ -323,13 +516,14 @@ const RulePanel = ({
   );
 };
 
-const RuleConditionItem = ({ 
-  ruleCondition, 
-  ruleId, 
-  conditionIndex, 
-  getConditionTypeLabel, 
-  clientInfo, 
-  onRuleStatesUpdate 
+const RuleConditionItem = ({
+  ruleCondition,
+  ruleId,
+  conditionIndex,
+  getConditionTypeLabel,
+  clientInfo,
+  onRuleStatesUpdate,
+  portService
 }) => {
   const [showSettings, setShowSettings] = useState(false);
 
@@ -370,6 +564,7 @@ const RuleConditionItem = ({
         conditionIndex={conditionIndex}
         clientInfo={clientInfo}
         onRuleStatesUpdate={onRuleStatesUpdate}
+        portService={portService}
       />
       
       {showSettings && (

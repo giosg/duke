@@ -1,34 +1,42 @@
 import React, { useState, useEffect } from 'react';
 import { useClientInfoService } from '../hooks/useClientInfoService';
-import { usePortService } from '../hooks/usePortService';
 
-const Overview = () => {
-  const { 
-    clientInfo, 
-    getBasicInfo, 
-    enableCobrowse, 
-    showCobrowse, 
-    showClient, 
-    showButton 
-  } = useClientInfoService();
-  const { onMessage } = usePortService();
+const Overview = ({ portService }) => {
+  const {
+    clientInfo,
+    getBasicInfo,
+    enableCobrowse,
+    showCobrowse,
+    showClient,
+    showButton
+  } = useClientInfoService(portService.sendAsyncMessage);
+
   const [cobrowse, setCobrowse] = useState(false);
   const [showRooms, setShowRooms] = useState(false);
-  
+
   const currentVersion = "2.0.0";
 
+  // Effect to load basic info when port becomes connected
   useEffect(() => {
-    // Load basic info on component mount
-    getBasicInfo().catch(console.error);
+    if (portService.isConnected) {
+      getBasicInfo()
+        .then((result) => {
+          // Basic info loaded successfully
+        })
+        .catch((error) => {
+          console.error('Failed to load basic info:', error);
+        });
+    }
+  }, [portService.isConnected, getBasicInfo]);
 
-    // Listen for cobrowse status updates
-    const unlistenCobrowse = onMessage('cobrowseLoaded', (data) => {
+  // Effect to listen for cobrowse status updates
+  useEffect(() => {
+    const unlistenCobrowse = portService.onMessage('cobrowseLoaded', (data) => {
       setCobrowse(data);
     });
 
     return unlistenCobrowse;
-  }, [getBasicInfo, onMessage]);
-
+  }, [portService.onMessage]);
   const handleEnableCobrowse = () => {
     enableCobrowse().catch(console.error);
   };
@@ -51,7 +59,6 @@ const Overview = () => {
         <span className="version-text">Duke2-{currentVersion}</span>
       </span>
       <h3>Overview</h3>
-      
       <ul className="list-group">
         <li className={`list-group-item ${clientInfo.hasGiosg ? 'list-group-item-success' : 'list-group-item-danger'}`}>
           Giosg script loaded
@@ -72,9 +79,9 @@ const Overview = () => {
         </li>
 
         <li className={`list-group-item ${clientInfo.rooms?.length ? 'list-group-item-success' : 'list-group-item-danger'}`}>
-          <a 
-            href="javascript:void(0)" 
-            onClick={() => setShowRooms(!showRooms)} 
+          <a
+            href="javascript:void(0)"
+            onClick={() => setShowRooms(!showRooms)}
             className="text-success"
           >
             Rooms connected
@@ -132,15 +139,15 @@ const Overview = () => {
       </button>
 
       <div className="technical-info">
-        <strong>Company ID</strong>  
+        <strong>Company ID</strong>
         {clientInfo.companyId && <kbd>{clientInfo.companyId}</kbd>}<br />
-        <strong>Domain ID</strong>   
+        <strong>Domain ID</strong>
         {clientInfo.domainId && <kbd>{clientInfo.domainId}</kbd>}<br />
-        <strong>Company ID</strong>  
+        <strong>Company ID</strong>
         {clientInfo.companyId && <kbd>{clientInfo.companyId}</kbd>}<br />
-        <strong>Visitor CID</strong> 
+        <strong>Visitor CID</strong>
         {clientInfo.visitorCid && <kbd>{clientInfo.visitorCid}</kbd>}<br />
-        <strong>Visitor GID</strong> 
+        <strong>Visitor GID</strong>
         {clientInfo.visitorGid && <kbd>{clientInfo.visitorGid}</kbd>}
       </div>
     </div>
