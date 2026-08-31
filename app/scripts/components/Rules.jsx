@@ -220,10 +220,10 @@ const Rules = ({ portService }) => {
 
   return (
     <div>
-      <a href="javascript:void(0);" className="pull-right" onClick={reload} disabled={loading}>
+      <button type="button" className="btn btn-link pull-right" onClick={reload} disabled={loading}>
         <i className={`fa fa-fw ${loading ? 'fa-spin fa-spinner' : 'fa-refresh'}`}></i>
         {loading ? 'Loading...' : 'Reload'}
-      </a>
+      </button>
       <h3>
         Rules
         <small>
