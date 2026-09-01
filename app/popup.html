@@ -1,57 +1,14 @@
 <!DOCTYPE html>
-<html lang="en" ng-app="popup" ng-csp>
+<html lang="en">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- build:css popup.css -->
-        <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
-        <link rel="stylesheet" href="bower_components/angular/angular-csp.css">
-        <link rel="stylesheet" href="css/fonts.css">
-        <link rel="stylesheet" href="css/font-awesome.min.css">
-        <link rel="stylesheet" href="css/popup.css">
-    <!-- endbuild -->
-    <title>Popup Extension</title>
+    <title>Duke Extension</title>
+    <link rel="stylesheet" href="css/main.css">
   </head>
 
   <body>
-    <ul class="nav nav-tabs">
-      <li ui-sref-active="active">
-        <a ui-sref="overview" href>
-          <i class="fa fa-fw fa-eye"></i> Overview
-        </a>
-      </li>
-      <li ui-sref-active="active">
-        <a ui-sref="rules" href>
-          <i class="fa fa-fw fa-cogs"></i> Rules
-        </a>
-      </li>
-      <li ui-sref-active="active">
-        <a ui-sref="cart" href>
-          <i class="fa fa-fw fa-shopping-cart"></i> Cart
-        </a>
-      </li>
-    </ul>
-    <div ui-view></div>
-    <div class="load-mask" ng-controller="LoadMaskController as loadMask" ng-show="loadMask.isVisible">
-      <img src="images/duke.png" />
-      <div class="load-mask-inner">
-        <i class="fa fa-fw fa-spinner fa-spin"></i>
-      </div>
-    </div>
-    <!-- build:js popup.js -->
-    <script src="bower_components/jquery/dist/jquery.min.js"></script>
-    <script src="bower_components/underscore/underscore.js"></script>
-    <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
-    <script src="bower_components/angular/angular.min.js"></script>
-    <script src="bower_components/angular-ui-router/release/angular-ui-router.js"></script>
-    <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
-    <script type="text/javascript" src="/scripts/app/modules/angular-underscore.min.js"></script>
-    <script src="scripts/app/app.js"></script>
-    <script src="scripts/app/routes.js"></script>
-    <script src="scripts/app/controllers/controllers.js"></script>
-    <script src="scripts/app/services/services.js"></script>
-    <script src="scripts/app/services/portservice.js"></script>
-    <script src="scripts/app/services/clientinfoservice.js"></script>
-    <!-- endbuild -->
+    <div id="react-root"></div>
+    <script type="module" src="./scripts/main.js"></script>
   </body>
 </html>

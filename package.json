@@ -1,10 +1,23 @@
 {
   "name": "duke2",
   "version": "1.0.2",
-  "devDependencies": {},
-  "engines": {},
-  "scripts": {},
+  "type": "module",
+  "scripts": {
+    "dev": "vite build --mode development --watch",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "vite": "^5.0.0",
+    "@vitejs/plugin-react": "^4.2.0",
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0"
+  },
   "dependencies": {
-    "bower": "^1.8.8"
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.8.0",
+    "bootstrap": "^3.4.1",
+    "lodash": "^4.17.21"
   }
 }

@@ -66,15 +66,18 @@ a:hover {
 }
 
 .panel-body .text-success {
-  color: #4cd482;
+  color: #28a745;
+  font-weight: 600;
 }
 
 .panel-body .text-danger {
-  color: #fb008d;
+  color: #dc3545;
+  font-weight: 600;
 }
 
 .panel-body .text-warning {
-  color: #fb008d;
+  color: #dc3545;
+  font-weight: 600;
 }
 
 .panel-body a {
@@ -82,11 +85,12 @@ a:hover {
 }
 
 .panel-body strong.text-primary {
-  color: #4cd482;
+  color: #007bff;
+  font-weight: 600;
 }
 
 .panel-body code {
-  color: #fb008d;
+  color: #e83e8c;
 }
 
 a.text-success {
@@ -179,6 +183,10 @@ a.text-danger {
   border-color: #444 !important;
   border-width: 2px !important;
   overflow: hidden;
+}
+
+.panel-heading a {
+  color: #fff;
 }
 
 .panel-heading a.ng-binding {

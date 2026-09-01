@@ -148,13 +148,11 @@
   };
 
   DukePostMessageClient.prototype.on_showClient = function (data) {
-    GiosgClient.createChatDialog();
-    GiosgClient.showClient();
+    GiosgClient.openChatDialog();
     this.sendResponse(data.query, {});
   };
 
   DukePostMessageClient.prototype.on_showButton = function (data) {
-    GiosgClient._createChatButton();
     GiosgClient.showChatButton();
     this.sendResponse(data.query, {});
   };
