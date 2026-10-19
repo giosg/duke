@@ -8,21 +8,20 @@ Because https://www.youtube.com/watch?v=uUcEGOLfUTE
 
 ## How to develop
 - Fork this repo and clone it
-- Run `npm install` and `bower install`
+- Run `npm install`
+- Run `npm run dev` to build the extension into `dist/` and rebuild on changes (or `npm run build` for a one-off production build)
 - Go to `chrome://extensions/`
 - Activate developer mode
-- Click on  `load an unpacked extension` and locate your cloned repo, and select the `app` folder
-- You can now modify the extension code and then reload page to see your changes
+- Click on `Load unpacked`, locate your cloned repo and select the `dist` folder
+- You can now modify the extension code, then reload the extension in `chrome://extensions/` to see your changes
 - Do some changes and submit a pull request
 
 ## Publish new version of the extension
-Either follow the original documentation by Google: https://developer.chrome.com/extensions/packaging and do the building manually. See part "Uploading a previously packaged extension to the Chrome Web Store"
-
-or you can use the `build-and-package.sh` to pack the exension
-
-- First get the private key for Duke. Save it to some file i.e. `/Users/myname/key.pem`
-- Bump version in all places where it is referenced, see this commit for example: https://github.com/giosg/duke/pull/21/commits/94d27865cf70bed6536bb3a67a3f5d1eb3b0142e
-- Build `duke2.zip` with `build-and-package.sh`
-   - Example usage `./build-and-package.sh --key=/Users/myname/key.pem`
-- The script should output `duke2.zip` and you can upload that to Chrome Webstore
-- Commit version bump and push changes to master
+- Bump the version in `app/manifest.json` and in `package.json`/`package-lock.json`
+   - e.g. `npm version 2.0.1 --no-git-tag-version` and then edit `app/manifest.json` by hand
+   - The version shown in the popup is read from the manifest, so there is nothing else to update
+- Build `duke2.zip` with `./build-and-package.sh`
+   - The script fails if the manifest and `package.json` versions differ
+   - The private key is not needed for updating the existing Chrome Web Store item. If you need to include it (e.g. first upload of a previously self-packaged extension), pass `--key=/path/to/key.pem`
+- Upload `duke2.zip` to the Chrome Web Store developer dashboard
+- Commit the version bump, push to master and tag the release (e.g. `git tag 2.0.1 && git push --tags`)

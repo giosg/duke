@@ -14,7 +14,7 @@ const Overview = ({ portService }) => {
   const [cobrowse, setCobrowse] = useState(false);
   const [showRooms, setShowRooms] = useState(false);
 
-  const currentVersion = "2.0.0";
+  const currentVersion = chrome.runtime.getManifest().version;
 
   // Effect to load basic info when port becomes connected
   useEffect(() => {
